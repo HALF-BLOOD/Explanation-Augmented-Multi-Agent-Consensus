@@ -1,0 +1,4 @@
+# core: enough to run tests and offline mock experiments
+pyyaml>=6.0
+requests>=2.31
+pytest>=7.4

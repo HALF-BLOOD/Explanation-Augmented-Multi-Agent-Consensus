@@ -1,0 +1,67 @@
+# Experiment configuration
+# Uses offline mock models by default for testing and pipeline verification.
+# For API-backed experiments, configure openai_compat models and sbert embedder.
+
+models:
+  - name: m1
+    kind: mock
+    persona: 1
+  - name: m2
+    kind: mock
+    persona: 2
+  - name: m3
+    kind: mock
+    persona: 5
+
+  # --- Heterogeneous model suite (requires API keys in .env) ---
+  # - name: llama70b
+  #   kind: openai_compat
+  #   base_url: https://api.groq.com/openai/v1
+  #   model: llama-3.3-70b-versatile
+  #   api_key_env: GROQ_API_KEY
+  #   min_interval_s: 2.5
+  # - name: qwen32b
+  #   kind: openai_compat
+  #   base_url: https://api.groq.com/openai/v1
+  #   model: qwen/qwen3-32b
+  #   api_key_env: GROQ_API_KEY
+  #   min_interval_s: 2.5
+  # - name: gemini-flash
+  #   kind: openai_compat
+  #   base_url: https://generativelanguage.googleapis.com/v1beta/openai
+  #   model: gemini-2.5-flash
+  #   api_key_env: GEMINI_API_KEY
+  #   min_interval_s: 4.0
+
+excre:
+  rounds: 3
+  devils_advocate: true
+  anchor: true
+  convergence_eps: 0.02
+  temperature: 0.3
+  max_tokens: 900
+
+imrc:
+  embedder: lexical          # lexical (offline) | sbert (production)
+  sbert_model: sentence-transformers/all-mpnet-base-v2
+  # Component weights: alpha (semantic), beta (structural), gamma (evidence)
+  alpha: 0.5
+  beta: 0.2
+  gamma: 0.3
+  evidence_threshold: 0.5
+
+trust:
+  w_agreement: 0.35
+  w_imrc: 0.35
+  w_confidence: 0.20
+  w_converged: 0.10
+
+sc:
+  k: 5
+  temperature: 0.7
+
+judge:
+  model: null                # null = default first model
+
+cache: true
+cache_dir: .cache/llm
