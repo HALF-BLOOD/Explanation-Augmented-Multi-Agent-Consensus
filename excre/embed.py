@@ -30,6 +30,11 @@ class LexicalSim:
 
 class SbertSim:
     def __init__(self, model_name="sentence-transformers/all-mpnet-base-v2"):
+        import os
+        # this box has an old TF/Keras install that transformers trips over;
+        # we only ever use the torch path, so keep TF out of it entirely
+        os.environ.setdefault("USE_TF", "0")
+        os.environ.setdefault("TRANSFORMERS_NO_TF", "1")
         from sentence_transformers import SentenceTransformer  # lazy, heavy
         self.model = SentenceTransformer(model_name)
         self.name = model_name

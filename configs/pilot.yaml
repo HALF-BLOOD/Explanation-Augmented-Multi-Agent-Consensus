@@ -1,0 +1,82 @@
+# Pilot configuration: three heterogeneous model families over free-tier
+# endpoints. Rate intervals are set for the free tiers as of Sep 2026:
+# Groq 30 req/min shared per org, Gemini flash ~10 req/min and 250 req/day,
+# NVIDIA NIM ~40 req/min. Gemini's daily cap is the binding constraint --
+# keep pilot runs to <= 8 items so one pass stays under it.
+
+# checked against the live /models endpoints on 14 Sep 2026: groq has
+# retired the big llama models (gpt-oss and qwen are the usable ones left),
+# and gemini-2.5-flash is closed to new users -- the API error itself
+# recommends gemini-3.6-flash. qwen/qwen3.8-27b on groq is the spare
+# fourth family if one of these misbehaves.
+models:
+  - name: gptoss120b
+    kind: openai_compat
+    base_url: https://api.groq.com/openai/v1
+    model: openai/gpt-oss-120b
+    api_key_env: GROQ_API_KEY
+    min_interval_s: 2.5
+    max_tokens_override: 3000   # reasoning tokens count against the cap
+  - name: gemini-flash
+    kind: openai_compat
+    base_url: https://generativelanguage.googleapis.com/v1beta/openai
+    # free quota is a separate bucket per model. 3.6-flash's bucket died
+    # after ~30 calls in 15 min (metric says limit: 20 per window), so the
+    # seat moved to 3.5-flash paced at 20 calls per ~17 min. Slow but it
+    # finishes unattended. Real 300-item runs need billing enabled on this
+    # key -- the free tier cannot carry them on any spacing.
+    model: gemini-3.5-flash
+    api_key_env: GEMINI_API_KEY
+    min_interval_s: 50
+    max_tokens_override: 3000
+  - name: qwen27b
+    kind: openai_compat
+    base_url: https://api.groq.com/openai/v1
+    model: qwen/qwen3.8-27b
+    api_key_env: GROQ_API_KEY   # shares groq's rate gate with gptoss120b
+    min_interval_s: 2.5
+    max_tokens_override: 3000
+
+  # nvidia's free NIM endpoint served deepseek fine in the morning smoke
+  # test, then started hanging every request by early afternoon (their
+  # queue, not our code). Kept as a spare fourth family -- re-enable when
+  # it behaves, or route deepseek through openrouter instead.
+  # - name: deepseek-flash
+  #   kind: openai_compat
+  #   base_url: https://integrate.api.nvidia.com/v1
+  #   model: deepseek-ai/deepseek-v4-flash-0731
+  #   api_key_env: DEEPSEEK_API_KEY   # nvapi- key from build.nvidia.com
+  #   min_interval_s: 1.6
+  #   max_tokens_override: 3000
+
+excre:
+  rounds: 3
+  devils_advocate: true
+  anchor: true
+  convergence_eps: 0.02
+  temperature: 0.3
+  max_tokens: 900
+
+imrc:
+  embedder: lexical   # switch to sbert once sentence-transformers is installed
+  sbert_model: sentence-transformers/all-mpnet-base-v2
+  alpha: 0.5
+  beta: 0.2
+  gamma: 0.3
+  evidence_threshold: 0.5
+
+trust:
+  w_agreement: 0.35
+  w_imrc: 0.35
+  w_confidence: 0.20
+  w_converged: 0.10
+
+sc:
+  k: 5
+  temperature: 0.7
+
+judge:
+  model: gptoss120b
+
+cache: true
+cache_dir: .cache/llm

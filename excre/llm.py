@@ -42,7 +42,8 @@ class DiskCache:
 
 class OpenAICompatModel:
     def __init__(self, name, base_url, model, api_key_env,
-                 min_interval_s=1.0, cache=None, timeout=120):
+                 min_interval_s=1.0, cache=None, timeout=240,
+                 max_tokens_override=None, extra_payload=None):
         self.name = name
         self.base_url = base_url.rstrip("/")
         self.model = model
@@ -50,6 +51,10 @@ class OpenAICompatModel:
         self.min_interval_s = min_interval_s
         self.cache = cache
         self.timeout = timeout
+        # thinking models (gemini 2.5, deepseek v4) burn completion budget on
+        # reasoning tokens, so they need a higher cap than the global one
+        self.max_tokens_override = max_tokens_override
+        self.extra_payload = extra_payload or {}
 
     def _key(self, payload):
         return json.dumps({"u": self.base_url, "p": payload}, sort_keys=True)
@@ -59,8 +64,9 @@ class OpenAICompatModel:
             "model": self.model,
             "messages": messages,
             "temperature": temperature,
-            "max_tokens": max_tokens,
+            "max_tokens": self.max_tokens_override or max_tokens,
         }
+        payload.update(self.extra_payload)
         if seed is not None:
             payload["seed"] = seed
         key = self._key(payload)
@@ -79,14 +85,30 @@ class OpenAICompatModel:
         if wait > 0:
             time.sleep(wait)
 
+        # hard ceiling on time spent inside one logical call. Learned the
+        # hard way: nvidia's free endpoint can hang every request for hours,
+        # and blindly honouring a huge Retry-After put a run to sleep --
+        # better to error out fast, record the item as failed, and let a
+        # resumed run pick it up when the provider recovers.
+        deadline = time.monotonic() + 6 * 60
         backoff = 2.0
         for attempt in range(6):
+            if time.monotonic() > deadline:
+                break
             _last_call[self.base_url] = time.monotonic()
-            r = requests.post(
-                self.base_url + "/chat/completions",
-                headers={"Authorization": f"Bearer {api_key}"},
-                json=payload, timeout=self.timeout,
-            )
+            try:
+                r = requests.post(
+                    self.base_url + "/chat/completions",
+                    headers={"Authorization": f"Bearer {api_key}"},
+                    json=payload, timeout=self.timeout,
+                )
+            except (requests.exceptions.Timeout,
+                    requests.exceptions.ConnectionError) as e:
+                print(f"    [{self.name}] {type(e).__name__}, "
+                      f"attempt {attempt + 1}/6", flush=True)
+                time.sleep(backoff + random.uniform(0, 1))
+                backoff = min(backoff * 2, 60)
+                continue
             if r.status_code == 200:
                 body = r.json()
                 text = body["choices"][0]["message"]["content"] or ""
@@ -99,11 +121,17 @@ class OpenAICompatModel:
             if r.status_code in (429, 500, 502, 503):
                 retry_after = r.headers.get("retry-after")
                 delay = float(retry_after) if retry_after else backoff
+                # a retry-after of an hour means the daily quota is gone;
+                # sleeping through it inside a run helps nobody
+                delay = min(delay, 90)
+                print(f"    [{self.name}] HTTP {r.status_code}, waiting "
+                      f"{delay:.0f}s (attempt {attempt + 1}/6)", flush=True)
                 time.sleep(delay + random.uniform(0, 1))
                 backoff = min(backoff * 2, 60)
                 continue
             raise RuntimeError(f"{self.name}: HTTP {r.status_code}: {r.text[:300]}")
-        raise RuntimeError(f"{self.name}: gave up after repeated 429/5xx")
+        raise RuntimeError(f"{self.name}: unreachable or rate-limited "
+                           f"beyond the retry budget")
 
 
 class MockModel:
@@ -192,6 +220,8 @@ def build_models(model_cfgs, cache_dir=None, use_cache=True):
                 cfg["name"], cfg["base_url"], cfg["model"],
                 cfg["api_key_env"],
                 min_interval_s=cfg.get("min_interval_s", 1.0),
+                max_tokens_override=cfg.get("max_tokens_override"),
+                extra_payload=cfg.get("extra_payload"),
                 cache=cache))
         else:
             raise ValueError(f"unknown model kind: {kind}")

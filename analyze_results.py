@@ -115,7 +115,7 @@ def main():
                     if clean[i].get("correct") and not adv[i].get("correct"))
         print(f"  consensus flipped to wrong on {flips}/{len(common)} items")
 
-    # Convergence metrics
+    # Convergence and schema compliance (excre runs carry the full trail)
     for name in ("excre", "excre_adv"):
         if name in runs:
             rs = list(runs[name].values())
@@ -123,6 +123,19 @@ def main():
             mean_rounds = sum(r.get("rounds_run", 0) for r in rs) / len(rs)
             print(f"\n{name}: converged early on {conv}/{len(rs)} items, "
                   f"mean rounds {mean_rounds:.2f}")
+            per_model = defaultdict(lambda: [0, 0, 0])  # total, parsed, repaired
+            for r in rs:
+                for t in r.get("trail", []):
+                    row = per_model[t["model"]]
+                    row[0] += 1
+                    row[1] += 1 if t["path"].get("parsed") else 0
+                    row[2] += 1 if t.get("repaired") else 0
+            if per_model:
+                print(f"  schema compliance (valid after <=1 repair / "
+                      f"repair used):")
+                for mn, (tot, ok, rep) in sorted(per_model.items()):
+                    print(f"    {mn:<16} {100 * ok / tot:5.1f}% valid, "
+                          f"{100 * rep / tot:4.1f}% repaired  ({tot} calls)")
 
 
 if __name__ == "__main__":

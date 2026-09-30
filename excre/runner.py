@@ -11,9 +11,11 @@ from .engine import run_excre
 
 
 def _done_ids(path):
+    # error records don't count as done: a resumed run retries those items
+    # (their successful calls come back free from the response cache)
     if not os.path.exists(path):
         return set()
-    return {r["id"] for r in read_jsonl(path)}
+    return {r["id"] for r in read_jsonl(path) if "error" not in r}
 
 
 def plausible_wrong_answer(item):

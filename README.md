@@ -62,3 +62,16 @@ data/samples/   Validation sample items for offline testing
 notes/          Research notes and positioning analysis
 tests/          Unit and integration test suites
 ```
+
+Standalone tools:
+
+```
+rescore.py           Recompute IMRC/trust from stored reasoning trails
+                     (embedder and weight variants without new API calls)
+make_label_sheet.py  Sample blind path pairs into a CSV for hand-labelling
+check_labels.py      Correlate hand labels with IMRC components
+```
+
+`configs/pilot.yaml` holds the live three-family model set (GPT-OSS 120B via
+Groq, Gemini 3.6 Flash, DeepSeek V4 Flash via NVIDIA NIM); `default.yaml`
+stays on offline mocks so tests never need keys.

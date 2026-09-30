@@ -5,11 +5,10 @@ Computes pairwise semantic, structural, and evidence congruence:
 """
 
 from itertools import combinations
-
 try:
     from scipy.optimize import linear_sum_assignment
     _HAVE_SCIPY = True
-except ImportError:
+except (ImportError, Exception):
     _HAVE_SCIPY = False
 
 

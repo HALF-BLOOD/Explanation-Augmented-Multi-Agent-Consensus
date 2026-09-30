@@ -112,7 +112,10 @@ def load_hf(name, subset_cfg, n, seed):
 
 
 def _gsm8k(load_dataset, cfg):
-    ds = load_dataset("openai/gsm8k", "main", split="test")
+    # split=train gives a disjoint dev slice for prompt/threshold tuning,
+    # so nothing is ever tuned on the test items
+    ds = load_dataset("openai/gsm8k", "main",
+                      split=cfg.get("split", "test"))
     out = []
     for row in ds:
         gold = row["answer"].split("####")[-1].strip()

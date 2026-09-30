@@ -1,8 +1,0 @@
-# everything needed for real experiments on top of requirements.txt
--r requirements.txt
-datasets>=2.19
-sentence-transformers>=3.0
-scipy>=1.11
-numpy>=1.26
-pandas>=2.1
-matplotlib>=3.8
