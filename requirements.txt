@@ -1,5 +1,3 @@
-# everything needed for real experiments on top of requirements.txt
--r requirements.txt
 datasets>=2.19
 sentence-transformers>=3.0
 scipy>=1.11

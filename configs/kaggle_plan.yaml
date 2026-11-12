@@ -1,0 +1,20 @@
+# what the kaggle sessions grind through. Each pass adds `block` items to
+# every job below (in this order), so when the quota dies mid-session all
+# systems have seen roughly the same items and still pair up for McNemar.
+config: configs/pilot.yaml
+out: runs/phase1
+n: 300
+block: 10
+
+datasets: [gsm8k, strategyqa, truthfulqa, mmlu]
+
+systems:
+  - excre
+  - cot:gptoss120b
+  - cot:qwen27b
+  - cot:gemini-flash
+  - judge            # its three cot calls are cache hits from the lines above
+  - mad
+  - reconcile
+  - sc:gptoss120b
+  - excre_adv        # saboteur rotates over the three models

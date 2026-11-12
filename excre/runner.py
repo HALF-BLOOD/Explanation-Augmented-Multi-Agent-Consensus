@@ -8,9 +8,10 @@ import traceback
 from . import baselines
 from .data import append_jsonl, is_correct, make_normaliser, read_jsonl
 from .engine import run_excre
+from .llm import ModelUnavailable
 
 
-def _done_ids(path):
+def done_ids(path):
     # error records don't count as done: a resumed run retries those items
     # (their successful calls come back free from the response cache)
     if not os.path.exists(path):
@@ -41,34 +42,51 @@ def plausible_wrong_answer(item):
 
 
 def run_system(system, items, models, simfn, cfg, out_path,
-               adversarial=False, log=print):
-    done = _done_ids(out_path)
-    todo = [it for it in items if it["id"] not in done]
+               adversarial=False, log=print, stop_at=None, after_item=None):
+    done = done_ids(out_path)
+    # k is the item's position in the dataset, not in the leftover list, so
+    # the saboteur rotation doesn't shift every time a run resumes
+    todo = [(k, it) for k, it in enumerate(items) if it["id"] not in done]
+    if not todo:
+        return
+    tag = system + ("_adv" if adversarial else "")
     if done:
-        log(f"[{system}] resuming: {len(done)} done, {len(todo)} to go")
+        log(f"[{tag}] resuming: {len(done)} done, {len(todo)} to go")
 
     n_err = 0
     t0 = time.time()
-    for k, item in enumerate(todo):
+    for j, (k, item) in enumerate(todo):
+        if stop_at and time.time() > stop_at:
+            log(f"[{tag}] out of time after {j} items")
+            return
         try:
             rec = _dispatch(system, item, models, simfn, cfg,
                             adversarial, k)
             rec["correct"] = is_correct(item, rec["answer"])
             rec["gold"] = item["gold"]
             rec["dataset"] = item["dataset"]
-        except KeyboardInterrupt:
+        except (KeyboardInterrupt, ModelUnavailable):
             raise
         except Exception:
             n_err += 1
             rec = {"system": system, "id": item["id"], "error":
                    traceback.format_exc(limit=3)}
-            log(f"[{system}] error on {item['id']} "
+            log(f"[{tag}] error on {item['id']} "
                 f"({n_err} so far)")
         append_jsonl(out_path, rec)
-        if (k + 1) % 10 == 0:
-            rate = (k + 1) / max(time.time() - t0, 1e-6)
-            log(f"[{system}] {k + 1}/{len(todo)} ({rate:.2f} items/s)")
-    log(f"[{system}] finished: {len(todo)} items, {n_err} errors -> {out_path}")
+        if after_item:
+            after_item()
+        if (j + 1) % 10 == 0:
+            rate = (j + 1) / max(time.time() - t0, 1e-6)
+            log(f"[{tag}] {j + 1}/{len(todo)} ({rate:.2f} items/s)")
+    log(f"[{tag}] finished: {len(todo)} items, {n_err} errors -> {out_path}")
+
+
+def models_needed(system, models):
+    if system.startswith(("cot", "sc")):
+        prefix = system.split(":", 1)[0]
+        return {_pick_model(system, prefix, models).name}
+    return {m.name for m in models}
 
 
 def _dispatch(system, item, models, simfn, cfg, adversarial, k):

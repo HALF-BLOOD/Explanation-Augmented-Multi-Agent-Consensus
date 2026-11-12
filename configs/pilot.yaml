@@ -1,14 +1,3 @@
-# Pilot configuration: three heterogeneous model families over free-tier
-# endpoints. Rate intervals are set for the free tiers as of Sep 2026:
-# Groq 30 req/min shared per org, Gemini flash ~10 req/min and 250 req/day,
-# NVIDIA NIM ~40 req/min. Gemini's daily cap is the binding constraint --
-# keep pilot runs to <= 8 items so one pass stays under it.
-
-# checked against the live /models endpoints on 14 Sep 2026: groq has
-# retired the big llama models (gpt-oss and qwen are the usable ones left),
-# and gemini-2.5-flash is closed to new users -- the API error itself
-# recommends gemini-3.6-flash. qwen/qwen3.8-27b on groq is the spare
-# fourth family if one of these misbehaves.
 models:
   - name: gptoss120b
     kind: openai_compat
@@ -20,11 +9,6 @@ models:
   - name: gemini-flash
     kind: openai_compat
     base_url: https://generativelanguage.googleapis.com/v1beta/openai
-    # free quota is a separate bucket per model. 3.6-flash's bucket died
-    # after ~30 calls in 15 min (metric says limit: 20 per window), so the
-    # seat moved to 3.5-flash paced at 20 calls per ~17 min. Slow but it
-    # finishes unattended. Real 300-item runs need billing enabled on this
-    # key -- the free tier cannot carry them on any spacing.
     model: gemini-3.5-flash
     api_key_env: GEMINI_API_KEY
     min_interval_s: 50

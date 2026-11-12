@@ -12,3 +12,4 @@ archive/
 *.pdf
 archive
 notes/
+*.tmp

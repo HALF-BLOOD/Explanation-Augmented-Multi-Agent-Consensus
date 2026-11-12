@@ -15,6 +15,25 @@ except ImportError:
 _last_call = {}  # base_url -> monotonic time of last request
 
 
+class ModelUnavailable(RuntimeError):
+    """Raised when a model can't be used for the rest of the session."""
+
+    def __init__(self, model, why):
+        super().__init__(f"{model}: {why}")
+        self.model = model
+        self.why = why
+
+
+def _daily_limit(r):
+    # gemini names the quota "...PerDay...", groq says "tokens per day (TPD)"
+    if "perday" in r.text.lower().replace(" ", ""):
+        return True
+    try:
+        return float(r.headers.get("retry-after", 0)) > 600
+    except ValueError:
+        return False
+
+
 class DiskCache:
     def __init__(self, root):
         self.root = root
@@ -79,17 +98,15 @@ class OpenAICompatModel:
             raise RuntimeError("pip install requests to use real models")
         api_key = os.environ.get(self.api_key_env, "")
         if not api_key:
-            raise RuntimeError(f"{self.api_key_env} is not set (see .env.example)")
+            raise ModelUnavailable(self.name, f"{self.api_key_env} is not set")
 
         wait = self.min_interval_s - (time.monotonic() - _last_call.get(self.base_url, 0))
         if wait > 0:
             time.sleep(wait)
 
-        # hard ceiling on time spent inside one logical call. Learned the
-        # hard way: nvidia's free endpoint can hang every request for hours,
-        # and blindly honouring a huge Retry-After put a run to sleep --
-        # better to error out fast, record the item as failed, and let a
-        # resumed run pick it up when the provider recovers.
+        # hard ceiling on time spent inside one logical call. nvidia's free
+        # endpoint once hung every request for hours; past this point the
+        # model is treated as gone for the session and the item stays pending
         deadline = time.monotonic() + 6 * 60
         backoff = 2.0
         for attempt in range(6):
@@ -118,11 +135,13 @@ class OpenAICompatModel:
                 if self.cache:
                     self.cache.put(key, {"text": text, "usage": usage})
                 return text, usage
+            if r.status_code in (401, 403, 404):
+                raise ModelUnavailable(self.name, f"HTTP {r.status_code}: {r.text[:200]}")
+            if r.status_code == 429 and _daily_limit(r):
+                raise ModelUnavailable(self.name, "daily quota used up")
             if r.status_code in (429, 500, 502, 503):
                 retry_after = r.headers.get("retry-after")
                 delay = float(retry_after) if retry_after else backoff
-                # a retry-after of an hour means the daily quota is gone;
-                # sleeping through it inside a run helps nobody
                 delay = min(delay, 90)
                 print(f"    [{self.name}] HTTP {r.status_code}, waiting "
                       f"{delay:.0f}s (attempt {attempt + 1}/6)", flush=True)
@@ -130,8 +149,8 @@ class OpenAICompatModel:
                 backoff = min(backoff * 2, 60)
                 continue
             raise RuntimeError(f"{self.name}: HTTP {r.status_code}: {r.text[:300]}")
-        raise RuntimeError(f"{self.name}: unreachable or rate-limited "
-                           f"beyond the retry budget")
+        raise ModelUnavailable(self.name, "unreachable or rate-limited "
+                                          "beyond the retry budget")
 
 
 class MockModel:
