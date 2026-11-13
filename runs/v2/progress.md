@@ -1,6 +1,6 @@
 # runs/v2
 
-updated 2026-11-13 08:38 UTC, +46 this session  
+updated 2026-11-13 08:53 UTC, +115 this session, stopped: stage 'core' waiting on qwen27b  
 qwen27b benched: daily quota used up
 
 done / total (accuracy so far)
@@ -9,12 +9,12 @@ done / total (accuracy so far)
 
 | system | gsm8k | strategyqa | truthfulqa |
 |---|---|---|---|
-| cot:gptoss120b | 10/100 (90%) | 0/100 | 0/100 |
+| cot:gptoss120b | 10/100 (90%) | 10/100 (80%) | 10/100 (100%) |
 | cot:qwen27b | 10/100 (90%) | 0/100 | 0/100 |
-| cot:gemini-flash-lite | 10/100 (90%) | 0/100 | 0/100 |
+| cot:gemini-flash-lite | 10/100 (90%) | 10/100 (70%) | 10/100 (80%) |
 | excre | 10/100 (90%) | 0/100 | 0/100 |
 | mad | 5/100 (100%) | 0/100 | 0/100 |
-| sc:gemini-flash-lite | 1/100 (100%) | 0/100 | 0/100 |
+| sc:gemini-flash-lite | 10/100 (90%) | 10/100 (70%) | 10/100 (90%) |
 
 ## saboteur
 
@@ -60,9 +60,9 @@ done / total (accuracy so far)
 
 | system | gsm8k | strategyqa | truthfulqa | mmlu |
 |---|---|---|---|---|
-| cot:gptoss120b | 10/300 (90%) | 0/300 | 0/300 | 0/300 |
+| cot:gptoss120b | 10/300 (90%) | 10/300 (80%) | 10/300 (100%) | 0/300 |
 | cot:qwen27b | 10/300 (90%) | 0/300 | 0/300 | 0/300 |
-| cot:gemini-flash-lite | 10/300 (90%) | 0/300 | 0/300 | 0/300 |
+| cot:gemini-flash-lite | 10/300 (90%) | 10/300 (70%) | 10/300 (80%) | 0/300 |
 | excre | 10/300 (90%) | 0/300 | 0/300 | 0/300 |
 | mad | 5/300 (100%) | 0/300 | 0/300 | 0/300 |
-| sc:gemini-flash-lite | 1/300 (100%) | 0/300 | 0/300 | 0/300 |
+| sc:gemini-flash-lite | 10/300 (90%) | 10/300 (70%) | 10/300 (90%) | 0/300 |
