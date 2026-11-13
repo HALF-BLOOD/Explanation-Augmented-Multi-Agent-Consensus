@@ -78,9 +78,8 @@ check_labels.py      Correlate hand labels with IMRC components
 ```
 
 `configs/main.yaml` is the model set for the paper runs: GPT-OSS 120B and
-Qwen3.8 27B via Groq, Gemini 3.5 Flash-Lite via Google. `pilot.yaml` is the
-earlier pilot set and `default.yaml` stays on offline mocks so tests never
-need keys.
+Qwen3.8 27B via Groq, Gemini 3.5 Flash-Lite via Google. `default.yaml` stays
+on offline mocks so tests never need keys.
 
 Systems a run can name: `excre`, `cot:<model>`, `sc:<model>`, `mad`,
 `reconcile`, `judge`; the ablations `excre_bare` (no anchor, no devil's

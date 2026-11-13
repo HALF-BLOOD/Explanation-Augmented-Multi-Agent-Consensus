@@ -2,13 +2,12 @@
 
 The engine writes the full audit trail into every excre result line, so
 metric variants (different embedder, different alpha/beta/gamma, different
-trust weights) never need fresh API calls -- this is what makes the pilot
-grid search affordable. Reads one results file, rewrites the metric fields,
-writes a new file; the trail itself is untouched.
+trust weights) never need fresh API calls. Reads one results file, rewrites
+the metric fields, writes a new file; the trail itself is untouched.
 
-    python rescore.py --results results/pilot-dev/excre.jsonl \
-        --data data/samples/dev_numeric.jsonl \
-        --config configs/pilot.yaml --out results/pilot-dev/excre_sbert.jsonl
+    python rescore.py --results runs/main/gsm8k/excre.jsonl \
+        --data runs/main/data/gsm8k.jsonl \
+        --embedder lexical --out results/gsm8k_excre_lexical.jsonl
 """
 
 import argparse
@@ -59,7 +58,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--results", required=True)
     ap.add_argument("--data", required=True)
-    ap.add_argument("--config", default="configs/pilot.yaml")
+    ap.add_argument("--config", default="configs/main.yaml")
     ap.add_argument("--out", required=True)
     # quick overrides so a grid search is a shell loop, not 20 yaml files
     ap.add_argument("--alpha", type=float, default=None)

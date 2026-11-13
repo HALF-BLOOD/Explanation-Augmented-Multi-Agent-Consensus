@@ -7,8 +7,8 @@ reasoning, 4 = same reasoning in different words). The IMRC scores are NOT
 shown on the sheet, so the labelling stays blind; they are stored in a
 separate key file for the correlation check afterwards.
 
-    python make_label_sheet.py --results results/pilot-dev/excre.jsonl \
-        --n 60 --out labels/pilot
+    python make_label_sheet.py --results runs/main/gsm8k/excre.jsonl \
+        --n 60 --out labels/main
 """
 
 import argparse
@@ -35,10 +35,10 @@ def path_text(path):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--results", required=True)
-    ap.add_argument("--config", default="configs/pilot.yaml")
+    ap.add_argument("--config", default="configs/main.yaml")
     ap.add_argument("--n", type=int, default=60)
     ap.add_argument("--seed", type=int, default=20049123)
-    ap.add_argument("--out", default="labels/pilot")
+    ap.add_argument("--out", default="labels/main")
     args = ap.parse_args()
 
     cfg = load_config(args.config)

@@ -14,7 +14,7 @@ from excre.stats import spearman
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--dir", default="labels/pilot")
+    ap.add_argument("--dir", default="labels/main")
     args = ap.parse_args()
 
     labels = {}
