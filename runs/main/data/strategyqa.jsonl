@@ -1,0 +1,300 @@
+{"dataset": "strategyqa", "format": "yesno", "question": "Can you buy a fair trade laptop?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0000"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Will Communion be denied to Wednesday name origin followers?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0001"}
+{"dataset": "strategyqa", "format": "yesno", "question": "For Hostas to look their best, do they need lots of chlorophyll?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0002"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are Durian fruits an olfactory delight?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0003"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could Durian cause someone's stomach to feel unwell?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0004"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Were Beauty and the Beast adaptations devoid of Kurt Sutter collaborators?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0005"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would Shaggy and Redenbacher popcorn founder both raise hand during first name roll call?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0006"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could John Key issue an executive order in the USA?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0007"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is unanimously elected president's birthday a break for mail carriers?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0008"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Has Don King killed more people than Charles Manson did with his own hands in 1971?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0009"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do salmon mate in the Caspian Sea?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0010"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is it unusual to play Happy hardcore music at a funeral?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0011"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is MIX a word and a roman numeral?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0012"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can an adult human skull hypothetically pass through the birth canal?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0013"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are classic nintendo games for emulator legal?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0014"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is the Asian black bear multicolored?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0015"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would an actuary be confused about what prime numbers are?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0016"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is the Louvre's pyramid known for being unbreakable? ", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0017"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Was the tenth Amendment to the Constitution written using Pitman shorthand?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0018"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Malcolm X avoid eating ham?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0019"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would an uninsured person be more likely than an insured person to decline a CT scan?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0020"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Will the Albany in Georgia reach a hundred thousand occupants before the one in New York?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0021"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does rock star Keith Richards play a captain of a boat in a movie?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0022"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Medieval English lords engage in fair trade with peasants?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0023"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can Jabberwocky be considered a sonnet?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0024"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are there Americans still enlisted in the Confederate States Army?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0025"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is ABBA's 1970's genre still relevant today?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0026"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is Tony Bennett's middle name shared by a former UFC champion?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0027"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Solomon make up bigger percentage of Islamic prophets than Kings of Judah?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0028"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Jon Brower Minnoch suffer from anorexia nervosa?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0029"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could Darth Vader hypothetically catch the Coronavirus?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0030"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can a goat be used for one of the ingredients in French toast?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0031"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Rumi spend his time in a state of euphoria?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0032"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would The Dark Knight be appropriate for a preschool class?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0033"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can the Toyota Hilux tip the scales against Mr. Ed?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0034"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Was Oscar Wilde's treatment under the law be considered fair in the US now?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0035"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do more anchovy live in colder temperature waters than warmer?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0036"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is it possible to binge entire EastEnders series without water?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0037"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Was the Carnation Revolution the deadliest revolution in Europe?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0038"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would a Gray Whale fit easily in an above ground pool?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0039"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could a hamster experience two leap years?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0040"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do people take laxatives because they enjoy diarrhea?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0041"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are there any chives hypothetically good for battling vampires?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0042"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does highest US Court have enough seats for every Prime Minister of the United Kingdom since 1952?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0043"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would you find olives at a heladeria?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0044"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do moths that live on sloths have family dinners?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0045"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is it unusual to eat spaghetti without a fork?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0046"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do sand cats avoid eating all of the prey of eels?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0047"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does Adobe Suite have video game engine coding?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0048"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does Iphone have more iterations than Samsung Galaxy?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0049"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is there a popular Disney character made from living ice?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0050"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can the Very Large Telescope observe the largest mountain on Earth?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0051"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Ivan the Terrible use the Byzantine calendar?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0052"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can crane slamdunk?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0053"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do Australians ride Kangaroos to work?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0054"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is number of different US President's in 1800s a lucky number in Hong Kong?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0055"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does Amtrak run from NYC directly to the Moai location?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0056"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can lettuce result in spontaneous abortion?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0057"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could Palm Beach be held in the palm of your hand?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0058"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Has the creator of Futurama lived in multiple centuries?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0059"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Was Subway involved in a pedophilia scandal?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0060"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Stone Cold Steve Austin wrestle in three different centuries?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0061"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are the colors on Marlboro package found on French flag?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0062"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could a Porsche 992 Turbo S defeat Usain Bolt in a 100 meter sprint?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0063"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do you need a farmer to make a circuit board?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0064"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would a psychic who admits to hot reading be trustworthy?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0065"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is CAS number 8009-03-8 harmful for a rash?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0066"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do the telescopes at Goldstone Deep Space Communications Complex work the night shift?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0067"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can actress Dafne Keen win the Eurovision Song Contest finals in 2020?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0068"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does taking ukemi halt kinetic energy?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0069"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is Edgar Allan Poe obscure in the world of horror fiction?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0070"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does Princess Peach's dress resemble a peach fruit?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0071"}
+{"dataset": "strategyqa", "format": "yesno", "question": "If it socially acceptable to wear an icon depicting crucifixion? ", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0072"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is it common for women to have moustaches?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0073"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does New Year's Day always occur on a Wednesday?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0074"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can French Defence initial move defend against four move checkmate?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0075"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could one Amazon share ever buy twenty year Netflix subscription?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0076"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could the Toyota Stadium sit a tenth of the population of Gotheburg?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0077"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would Cardi B. benefit from soy milk?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0078"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is Menthol associated with Thanksgiving?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0079"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can an emu chase a bogan?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0080"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can the history of art be learned by an amoeba?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0081"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can Hulk's alter ego explain atomic events?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0082"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could a Gladiator's weapon crush a diamond?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0083"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Was animal in You're a Good Sport, Charlie Brown, hypothetically a hound?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0084"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is it true that gay male couples cannot naturally reproduce?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0085"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do most high school head coaches make as much as the Head Coach at NCSU?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0086"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does Soylent use Pea for their source of protein? ", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0087"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can Michael Bloomberg fund the debt of Micronesia for a decade?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0088"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can you find Bugs Bunny at Space Mountain?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0089"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does United Airlines have a perfect operation record?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0090"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is lunch on the beach a good activity to spot the full circle of a rainbow?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0091"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Neanderthals use arithmetic?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0092"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would John the Baptist be invited to a hypothetical cephalophore reunion in heaven?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0093"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Helen Keller ever read a novel by J. K. Rowling?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0094"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could boolean algebra be described as binary?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0095"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would a nickel fit inside a koala pouch?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0096"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Supernatural break 2001 CW debuting shows seasons record?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0097"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can photography be considered abstract art?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0098"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can cancer cause excess adrenaline production?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0099"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would Gomer Pyle salute a lieutenant?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0100"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would someone on antidepressants need to be cautious of some citrus fruits?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0101"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can whole genome sequencing be used for COVID-19?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0102"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would Recep Tayyip Erdoğan be unfamiliar with börek?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0103"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is the skull formed as one whole bone?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0104"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would a Jehovah's witness approve of Alice's Adventures in Wonderland?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0105"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could the endowment of Johns Hopkins University pay off the MBTA debt?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0106"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Were weather phenomena avoided when naming minor league baseball teams?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0107"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is eggplant deadly to most atopic individuals? ", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0108"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could Snoopy transmit rabies?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0109"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Alice's Adventures in Wonderland inspire Macbeth?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0110"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would Cyndi Lauper use milk substitute in her rice pudding?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0111"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are monks forbidden from engaging in warfare?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0112"}
+{"dataset": "strategyqa", "format": "yesno", "question": "WIll Noah's Ark hypothetically sail through flooded Lincoln Tunnel?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0113"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can The Hobbit be read in its entirety in four minutes?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0114"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are all types of pottery safe to cook in?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0115"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can olive oil kill rabies?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0116"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is ID required to get all medications from all pharmacies?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0117"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can a student from Smithtown's Cleary School understand the speech of a French person?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0118"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does ABBA have similar gender configuration to The Mamas & The Papas?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0119"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Was Michael Crichton ever in danger of flunking out of Harvard as an undergraduate?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0120"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are human footprints absent from Mount Sharp?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0121"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would hypothermia be a concern for a human wearing zoot suit on Triton?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0122"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Was John George Bice's birthplace near Cornwall?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0123"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is SnapCap an example of a retail store?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0124"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Sony definitively win the video game war against Sega?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0125"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is Alistair Darling in favor of Scottish independence?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0126"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could a Hwasong-15 missile hypothetically reach Voyager 2?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0127"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is nickel dominant material in US 2020 nickels?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0128"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Saddam Hussein witness the inauguration of Donald Trump?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0129"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would a dog respond to bell before Grey seal?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0130"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Was Iggy Pop named after his father?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0131"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could Carl Friedrich Gauss speak to someone 100 miles away?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0132"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Naruto escape the Temple of Doom?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0133"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is Islamophobia against Cyprus majority religion misdirected?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0134"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are Mayors safe from harm from the federal government?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0135"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does Jason have anything in common with Dr. Disrespect?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0136"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are all Wednesdays in a year enough to read Bible 15 times?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0137"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can a traffic collision make someone a millionaire?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0138"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does monster name in West African Folklore that witches send into villages set Scrabble record?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0139"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would a duke hypothetically be subservient to a Tsar?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0140"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do storks need golden toads to survive?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0141"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does the anatomy of a camel lend itself to jokes on Wednesdays?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0142"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did King James I despise fairy beings?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0143"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is Nicole Kidman ideal choice to play Psylocke based on height and weight?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0144"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Johnny Carson win enough Emmy's to fill a carton if Emmy's were eggs?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0145"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did DARPA influence Albert Einstein? ", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0146"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Gandhi watch the television show Bonanza?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0147"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do guitarist's have fingers that can handle pain better than average?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0148"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would a blooming onion be possible with a shallot?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0149"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is Pan a symbol of virtue and virginity in women?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0150"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can a grey seal swim in the same water as the subject of Moby Dick?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0151"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does being good at guitar hero make you a good guitarist?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0152"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can the Moscow Kremlin fit inside Disney Land?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0153"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is a Boeing 737 cost covered by Wonder Woman (2017 film) box office receipts?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0154"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Will the torso be safe from blows to the largest and smallest bones in body?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0155"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Was Muhammed a member of the Uniting Church in Australia?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0156"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Will Ronda Rousey hypothetically defeat X-Men's Colossus in a fight?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0157"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can the city of Miami fit inside Uppsala?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0158"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do spider wasps have eight legs?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0159"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is University of Pittsburgh easier to enter than FBI?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0160"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does Nintendo's link ever see an astronomer?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0161"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is Michael an unpopular name in the United States?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0162"}
+{"dataset": "strategyqa", "format": "yesno", "question": "In geometry terms, is the Royal Observatory in Greenwich similar to a yield sign?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0163"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can someone sell their time through the Toronto Star?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0164"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would Michael J Fox qualify for the Army Rangers?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0165"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Were Greeks essential to crafting Egyptian Lighthouse of Alexandria?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0166"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do any video games about the end of civilization have slot machines?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0167"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could Johnny Carson's children fill out a water polo team?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0168"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is Christmas always celebrated on a Sunday?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0169"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does bull shark bite hurt worse than crocodile bite?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0170"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Was John Gall from same city as Stanford University?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0171"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is most store bought rice pudding made with brown rice?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0172"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could someone with fine motor control issues benefit from an altered keyboard layout?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0173"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is a construction worker required to build a portfolio?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0174"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does Biochemistry study gluons?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0175"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would a sesame seed be mistaken for a wood frog egg?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0176"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Will Conan the Barbarian hypothetically last a short time inside of Call of Duty?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0177"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Lil Wayne similar real name rapper has over quadruple Wayne's Grammy awards?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0178"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is dessert eaten before breakfast?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0179"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does Post Malone have a fear of needles?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0180"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can Family of Barack Obama ride comfortably in 2020 Jaguar F Type?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0181"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is the tibia necessary to win the Stanley Cup?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0182"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do quadragenarian's have little memory capacity?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0183"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do Bing (search engine) searches earn the searcher more than competitors do?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0184"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are swastikas used in the most common religion in India?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0185"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is Bucharest located south of Egypt?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0186"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would a sophist use an épée?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0187"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is most coffee produced South of the Equator?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0188"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does the Boy Who Cried Wolf hypothetically have reason to pray to Pan?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0189"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is sunscreen unhelpful for the condition that killed Bob Marley?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0190"}
+{"dataset": "strategyqa", "format": "yesno", "question": "At Christmastime, do some films remind us that groundhog day is approaching?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0191"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can Africanized bees be considered multicultural?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0192"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can surgery prevent an existential crisis?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0193"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would the historic Hattori Hanzō admire Naruto?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0194"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is shrimp prevalent in Ethiopian cuisine?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0195"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is a curling iron necessary in curling?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0196"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did John Kerry run in the 2010 United Kingdom general election?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0197"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are all cucumbers the same texture?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0198"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is Guitar Hero Beatles inappropriate for a US third grader?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0199"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is menthol associated with Christmas?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0200"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Were any of despised Pope Alexander VI's descendants canonized?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0201"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does a person need to be a parent to become a grandparent?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0202"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Was The Jackson 5 bigger family band than The Isley Brothers?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0203"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is breast cancer associated with a ribbon?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0204"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did the Wehrmacht affect the outcome of the War to End All Wars?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0205"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would you spend less on your food at Aldi than at Whole Foods?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0206"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are pancakes a bad snack for cats?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0207"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does an individual oceanographer study many sciences?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0208"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do all of the African regions that participated in the Portugese Colonial War share an official language?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0209"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could a Jujutsu expert hypothetically defeat a Janissary?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0210"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did John Lennon listen to Compact discs?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0211"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are those incapable of reproduction incapable of parenthood?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0212"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are there mental disorders you can hide?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0213"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Spiderman fight against Falcon in the MCU?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0214"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can the Supreme Court of Canada fight a Lucha trios match?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0215"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could you watch Naruto and Puzzle Place on the same channel?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0216"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are selfies more dangerous than plague in modern times?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0217"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is tobacco use made to seem enjoyable in Alice's Adventures in Wonderland?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0218"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did eggs need to be kept cold in the middle ages?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0219"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can paresthesia be caused by a white pigment?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0220"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Al-Farabi ever meet Mohammed?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0221"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are sables related to wolverines?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0222"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would a person with Anorexia nervosa be more likely to break a bone than a regular person?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0223"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would the crew of Apollo 15 have difficulty riding a unicycle?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0224"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would the fastest tortoise win a race against a Chicago \"L\"?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0225"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is Phobos part of the Andromeda galaxy?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0226"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do most middle class families have butlers?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0227"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can a snake swallow an M60 Patton?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0228"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are all United States Aldi locations owned by the same company?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0229"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would an Olympic athlete be tired out after running a mile?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0230"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could  jockey win Triple Crown between Eid al-Fitr endpoints?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0231"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do worshipers of Shiva make a pilgrimage to the Holy Land?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0232"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is the letter D influenced by the shape of ancient doors?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0233"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Doctor Strange creators also make Batman?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0234"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is the Mona Lisa in the same museum as the Venus de Milo?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0235"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Ivan the Terrible's father and grandfather have nicer nicknames?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0236"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did a Mediterranean Sea creature kill Steve Irwin?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0237"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could someone have arrived at Wrestlemania X in a Toyota Prius?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0238"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did US President during Spanish-American War suffer similar demise to Abraham Lincoln?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0239"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is the Joker in a healthy romantic relationship?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0240"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is a northern fur seal needing emergency surgery in July likely a safe anesthesia candidate?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0241"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can Arnold Schwarzenegger deadlift an adult Black rhinoceros?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0242"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Monty Python write the Who's on First sketch?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0243"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Should Peter Griffin be an expert at the craft of brewing?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0244"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can nitric acid break the Louvre?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0245"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would Columbus have discovered Durian trees during his 1492 expedition?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0246"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Japanese serfdom have higher status than English counterpart?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0247"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do depressed people travel to the Golden Gate Bridge often?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0248"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does Family Guy take place on the American West Coast?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0249"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Was a nuclear bomb used in the Napoleonic Wars?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0250"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do you need a large room if you want to get into 3D printing?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0251"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do all cancer patients get disability?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0252"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Phileas Fogg's around the world would be difficult to achieve during Pope John Paul I's reign?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0253"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would a Bulgarian priest eat a four-course meal on Christmas Eve?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0254"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do many fans of J.K Rowling know who Alan Rickman is?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0255"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is the most expensive color in the world Blue?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0256"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can you get Raclette in YMCA headquarters city?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0257"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do bodies movie during hanging?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0258"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can a Sphynx cat be used for wool?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0259"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Were there footprints on the moon in 1960?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0260"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Was the subject of Parsifal taken from British folklore?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0261"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did origin dynasty of Go precede Jia Sidao?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0262"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Have the Israelis played the Hammerstein Ballroom?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0263"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Columbus obtain his funding from the rulers of the Portugese Empire?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0264"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are right wing Amreicans opposed to marxism?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0265"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can Harry Potter book a flight on Asiana Airlines?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0266"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do hornets provide meaningful data for oceanographers?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0267"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can jackfruit be used as a weapon?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0268"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could Marco Rubio ride the Candymonium roller coaster at Hershey Park?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0269"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would a body builder prefer an elk burger over a beef burger?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0270"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Was Superhero fiction invented in the digital format?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0271"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are Leopard cats in less dire straits than Bornean Orangutan?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0272"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do giraffes require special facilities at zoos?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0273"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can E6000 cure before a hoverboard finishes the Daytona 500? ", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0274"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Alfred Hitchcock include internet slang in his films?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0275"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does Bombyx mori have a monopoly over silk production?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0276"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is the US Secretary of State similar to an administrative secretary of an office?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0277"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can every digit in Pi be memorized?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0278"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is Kobe's famous animal product used in a BLT?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0279"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does Disney's Alice in Wonderland involve the celebration of a holiday?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0280"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Are Brussels sprout particularly good for adrenal fatigue?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0281"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Is the Forbidden City host to a wooden rollercoaster?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0282"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could all the unemployed people due to 1933 Great Depression fit in Tiger Stadium?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0283"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Can I hold Bing in a basket?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0284"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Polar Bears roam around in Ancient Greece?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0285"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would Amy Winehouse's death have been prevented with Narcan?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0286"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would a Monoamine Oxidase candy bar cheer up a depressed friend?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0287"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would a birdwatcher pursue their hobby at a Philadelphia Eagles game?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0288"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do the Egyptian pyramids look the same from outside as they did when new?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0289"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would it be unusual to use paypal for drug deals?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0290"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Could Plato have agreed with the beliefs of Jainism?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0291"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would Avengers Comics be out of place in a DC Comics store?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0292"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would ISIS agree with Al-Farabi's religious sect?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0293"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Does store bought milk have cream at the top?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0294"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would General Zod prefer an iPhone over a Samsung Galaxy S4?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0295"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did the Beatles write any music in the Disco genre?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0296"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Did Eric Clapton have similar taste in women to one of the Beatles?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0297"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Do some psychotherapy patients have no mental illness?", "choices": null, "gold": "yes", "meta": {}, "id": "strategyqa-0298"}
+{"dataset": "strategyqa", "format": "yesno", "question": "Would a goblin shark eat at Crossroads Kitchen?", "choices": null, "gold": "no", "meta": {}, "id": "strategyqa-0299"}

@@ -155,7 +155,8 @@ def _strategyqa(load_dataset, cfg):
 
 def _truthfulqa(load_dataset, cfg):
     import random
-    ds = load_dataset("truthful_qa", "multiple_choice", split="validation")
+    ds = load_dataset("truthfulqa/truthful_qa", "multiple_choice",
+                      split="validation")
     rng = random.Random(20049123)
     out = []
     for row in ds:
