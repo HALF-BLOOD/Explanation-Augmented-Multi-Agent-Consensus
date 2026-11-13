@@ -3,7 +3,7 @@
 # 200k tokens/day per model: about 20 core questions a day on easy items,
 # fewer when the agents disagree and run all three rounds.
 config: configs/main.yaml
-out: runs/main
+out: runs/v2
 cache: runs/cache
 block: 10
 

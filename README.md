@@ -98,17 +98,17 @@ Everything a run produces is committed and pushed every 30 minutes and at the
 end of the session:
 
 ```
-runs/main/<dataset>/<system>.jsonl   one record per item, with the full trail
-runs/main/data/                      the sampled benchmark items
-runs/main/progress.md                done/total and accuracy per stage
-runs/main/sessions.jsonl             one line per session
-runs/main/manifest.json              models, settings and prompt hash at the start
+runs/v2/<dataset>/<system>.jsonl     one record per item, with the full trail
+runs/v2/data/                        the sampled benchmark items
+runs/v2/progress.md                  done/total and accuracy per stage
+runs/v2/sessions.jsonl               one line per session
+runs/v2/manifest.json                models, settings and prompt hash at the start
 runs/cache/                          every model response, keyed by request
 ```
 
 A run folder is tied to its manifest: if the models, settings or prompts
 change later, `kaggle_run.py` stops rather than mix two setups in one folder.
-The tables for the paper come from `python paper_report.py --run runs/main`.
+The tables for the paper come from `python paper_report.py --run runs/v2`.
 
 One-time setup:
 

@@ -32,6 +32,11 @@ def _seconds(text):
                for n, u in re.findall(r"([\d.]+)(ms|h|m|s)", text or ""))
 
 
+def _limit_kind(r):
+    m = re.search(r"\((\w+)\): Limit (\d+)", r.text)
+    return f" ({m.group(1)} limit {m.group(2)})" if m else ""
+
+
 def _daily_limit(r):
     # gemini names the quota "...PerDay...", groq says "tokens per day (TPD)"
     if "perday" in r.text.lower().replace(" ", ""):
@@ -71,7 +76,7 @@ class OpenAICompatModel:
     def __init__(self, name, base_url, model, api_key_env,
                  min_interval_s=1.0, cache=None, timeout=240,
                  max_tokens_override=None, extra_payload=None,
-                 token_floor=0):
+                 token_floor=0, output_tpm=0, send_seed=True):
         self.name = name
         self.base_url = base_url.rstrip("/")
         self.model = model
@@ -84,6 +89,8 @@ class OpenAICompatModel:
         self.max_tokens_override = max_tokens_override
         self.extra_payload = extra_payload or {}
         self.token_floor = token_floor
+        self.output_tpm = output_tpm
+        self.send_seed = send_seed
 
     def _key(self, payload):
         return json.dumps({"u": self.base_url, "p": payload}, sort_keys=True)
@@ -111,6 +118,9 @@ class OpenAICompatModel:
             raise ModelUnavailable(self.name, f"{self.api_key_env} is not set")
 
         gate = (self.base_url, self.model)
+        if not self.send_seed:
+            # gemini's endpoint rejects the field; the seed still keys the cache
+            payload.pop("seed", None)
 
         # hard ceiling on time spent inside one logical call. nvidia's free
         # endpoint once hung every request for hours; past this point the
@@ -118,9 +128,8 @@ class OpenAICompatModel:
         deadline = time.monotonic() + 6 * 60
         backoff = 2.0
         wasted = None
-        for attempt in range(6):
-            if time.monotonic() > deadline:
-                break
+        failures = 0
+        while failures < 6 and time.monotonic() < deadline:
             now = time.monotonic()
             wait = max(self.min_interval_s - (now - _last_call.get(gate, 0)),
                        _hold_until.get(gate, 0) - now)
@@ -135,8 +144,9 @@ class OpenAICompatModel:
                 )
             except (requests.exceptions.Timeout,
                     requests.exceptions.ConnectionError) as e:
+                failures += 1
                 print(f"    [{self.name}] {type(e).__name__}, "
-                      f"attempt {attempt + 1}/6", flush=True)
+                      f"attempt {failures}/6", flush=True)
                 time.sleep(backoff + random.uniform(0, 1))
                 backoff = min(backoff * 2, 60)
                 continue
@@ -154,6 +164,10 @@ class OpenAICompatModel:
                 if left is not None and float(left) < self.token_floor:
                     _hold_until[gate] = time.monotonic() + _seconds(
                         r.headers.get("x-ratelimit-reset-tokens"))
+                if self.output_tpm:
+                    refill = 60 * usage["completion_tokens"] / self.output_tpm
+                    _hold_until[gate] = max(_hold_until.get(gate, 0),
+                                            time.monotonic() + refill)
                 if not text.strip() and usage["finish"] == "length" and not wasted:
                     # the whole cap went on hidden reasoning: once more with room
                     wasted = usage
@@ -173,8 +187,15 @@ class OpenAICompatModel:
                 retry_after = r.headers.get("retry-after")
                 delay = float(retry_after) if retry_after else backoff
                 delay = min(delay, 90)
-                print(f"    [{self.name}] HTTP {r.status_code}, waiting "
-                      f"{delay:.0f}s (attempt {attempt + 1}/6)", flush=True)
+                # per-minute limits are pacing, not failure: only the deadline
+                # above ends them, so a busy minute can't bench a model
+                if r.status_code == 429:
+                    print(f"    [{self.name}] HTTP 429{_limit_kind(r)}, "
+                          f"waiting {delay:.0f}s", flush=True)
+                else:
+                    failures += 1
+                    print(f"    [{self.name}] HTTP {r.status_code}, waiting "
+                          f"{delay:.0f}s (attempt {failures}/6)", flush=True)
                 time.sleep(delay + random.uniform(0, 1))
                 backoff = min(backoff * 2, 60)
                 continue
@@ -284,6 +305,8 @@ def build_models(model_cfgs, cache_dir=None, use_cache=True):
                 max_tokens_override=cfg.get("max_tokens_override"),
                 extra_payload=cfg.get("extra_payload"),
                 token_floor=cfg.get("token_floor", 0),
+                output_tpm=cfg.get("output_tpm", 0),
+                send_seed=cfg.get("send_seed", True),
                 cache=cache))
         else:
             raise ValueError(f"unknown model kind: {kind}")

@@ -1,7 +1,7 @@
 """Paper tables from a run folder.
 
-    python paper_report.py --run runs/main
-    python paper_report.py --run runs/main --nli      # adds the CARA baseline
+    python paper_report.py --run runs/v2
+    python paper_report.py --run runs/v2 --nli      # adds the CARA baseline
 
 Every signal is recomputed from the stored trails, so embedder or weight
 variants cost no API calls. Writes analysis/report.md and analysis/items.csv
@@ -383,7 +383,7 @@ def checks_section(results, plain, rows, pairs, extra, iters):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--run", default=os.path.join("runs", "main"))
+    ap.add_argument("--run", default=os.path.join("runs", "v2"))
     ap.add_argument("--config", default=os.path.join("configs", "main.yaml"))
     ap.add_argument("--embedder", default=None, help="override imrc.embedder")
     ap.add_argument("--nli", action="store_true",

@@ -5,8 +5,8 @@ metric variants (different embedder, different alpha/beta/gamma, different
 trust weights) never need fresh API calls. Reads one results file, rewrites
 the metric fields, writes a new file; the trail itself is untouched.
 
-    python rescore.py --results runs/main/gsm8k/excre.jsonl \
-        --data runs/main/data/gsm8k.jsonl \
+    python rescore.py --results runs/v2/gsm8k/excre.jsonl \
+        --data runs/v2/data/gsm8k.jsonl \
         --embedder lexical --out results/gsm8k_excre_lexical.jsonl
 """
 
