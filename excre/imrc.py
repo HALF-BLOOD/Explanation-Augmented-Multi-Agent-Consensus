@@ -107,8 +107,9 @@ def imrc_pair(a, b, simfn, weights, evidence_threshold=0.5):
 def imrc_group(paths, simfn, weights, evidence_threshold=0.5):
     """Mean pairwise IMRC over a set of reasoning paths (with breakdown)."""
     if len(paths) < 2:
-        return {"semantic": 1.0, "structural": 1.0, "evidence": 1.0,
-                "imrc": 1.0, "pairs": 0}
+        # one path has nobody to be congruent with; pairs=0 marks it undefined
+        return {"semantic": 0.0, "structural": 0.0, "evidence": 0.0,
+                "imrc": 0.0, "pairs": 0}
     acc = {"semantic": 0.0, "structural": 0.0, "evidence": 0.0, "imrc": 0.0}
     n = 0
     for a, b in combinations(paths, 2):

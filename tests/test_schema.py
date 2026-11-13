@@ -68,3 +68,13 @@ def test_empty_input():
 def test_loose_json_helper():
     assert parse_loose_json('noise {"a": 1} noise') == {"a": 1}
     assert parse_loose_json("no json here") is None
+
+
+def test_final_answer_survives_markdown():
+    from excre.data import extract_final_answer, normalise_letter
+    assert extract_final_answer("work\n\n**Final answer:**  \n990") == "990"
+    assert extract_final_answer("so\n**Final answer: 990**") == "990"
+    assert extract_final_answer("x\nFinal answer: (B) Paris") == "(B) Paris"
+    assert normalise_letter(extract_final_answer("**Final Answer:** **B**")) == "B"
+    assert extract_final_answer("Final answer: 12\nlater\nFinal answer: 15") == "15"
+    assert extract_final_answer("the total is 42 apples") == "42"

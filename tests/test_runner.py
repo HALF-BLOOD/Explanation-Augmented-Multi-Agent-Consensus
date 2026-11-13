@@ -46,3 +46,27 @@ def test_models_needed():
     assert models_needed("cot:m2", MODELS) == {"m2"}
     assert models_needed("sc", MODELS) == {"m1"}
     assert models_needed("mad", MODELS) == {"m1", "m2", "m3"}
+
+
+def test_variants_and_same_model_group(tmp_path):
+    quiet = {"log": lambda *_: None}
+    run_system("excre_bare", ITEMS[:2], MODELS, SIM, CFG,
+               str(tmp_path / "bare.jsonl"), **quiet)
+    run_system("excre_same:m2", ITEMS[:2], MODELS, SIM, CFG,
+               str(tmp_path / "same.jsonl"), **quiet)
+    bare = read_jsonl(str(tmp_path / "bare.jsonl"))[0]
+    assert not any(t.get("devils_advocate") for t in bare["trail"])
+    same = read_jsonl(str(tmp_path / "same.jsonl"))[0]
+    assert set(same["per_model"]) == {"m2#0", "m2#1", "m2#2"}
+    assert models_needed("excre_same:m2", MODELS) == {"m2"}
+
+
+def test_debate_keeps_rounds_and_takes_a_saboteur(tmp_path):
+    out = tmp_path / "mad_adv.jsonl"
+    run_system("mad", ITEMS[:3], MODELS, SIM, CFG, str(out),
+               adversarial=True, log=lambda *_: None)
+    recs = read_jsonl(str(out))
+    assert [r["saboteur"]["model"] for r in recs] == ["m1", "m2", "m3"]
+    rounds = {t["round"] for t in recs[0]["trail"]}
+    assert rounds == set(range(CFG["excre"]["rounds"] + 1))
+    assert recs[0]["system"] == "mad_adv"

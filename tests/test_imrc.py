@@ -65,7 +65,8 @@ def test_empty_steps_guard():
 
 
 def test_group_mean_and_single():
-    assert imrc_group([A], SIM, W)["imrc"] == 1.0
+    lone = imrc_group([A], SIM, W)
+    assert lone["imrc"] == 0.0 and lone["pairs"] == 0
     g = imrc_group([A, A, A], SIM, W)
     assert g["pairs"] == 3
     assert g["imrc"] > 0.99

@@ -55,7 +55,9 @@ excre/
   engine.py     Core EXCRE loop: round 0, iterative revision rounds, convergence check
   baselines.py  CoT, Self-Consistency, MAD, ReConcile, and LLM-as-Judge
   data.py       Standardized item format, answer normalization, and benchmark loaders
-  runner.py     Per-item checkpointed execution and adversarial saboteur rotation
+  runner.py     Per-item checkpointed execution, saboteur rotation, and loop variants
+  signals.py    Per-item signals recomputed from stored trails for the analysis
+  cara.py       CARA-HYB (Wang & Yang 2026) as a baseline congruence metric
   stats.py      Statistical tests: Wilson CIs, exact McNemar, Spearman, AUROC, risk-coverage, Holm correction
 configs/        Experiment configuration files
 data/samples/   Validation sample items for offline testing
@@ -66,33 +68,55 @@ tests/          Unit and integration test suites
 Standalone tools:
 
 ```
+kaggle_run.py        Staged, resumable runs that commit their results (see below)
+paper_report.py      All paper tables from a run folder: accuracy, signal AUROCs,
+                     selective prediction, saboteur detection, ablations
 rescore.py           Recompute IMRC/trust from stored reasoning trails
                      (embedder and weight variants without new API calls)
 make_label_sheet.py  Sample blind path pairs into a CSV for hand-labelling
 check_labels.py      Correlate hand labels with IMRC components
 ```
 
-`configs/pilot.yaml` holds the live model set (GPT-OSS 120B and Qwen3.8 27B
-via Groq, Gemini 3.5 Flash); the DeepSeek V4 Flash entry via NVIDIA NIM is kept
-commented out until that endpoint is stable. `default.yaml` stays on offline
-mocks so tests never need keys.
+`configs/main.yaml` is the model set for the paper runs: GPT-OSS 120B and
+Qwen3.8 27B via Groq, Gemini 3.5 Flash-Lite via Google. `pilot.yaml` is the
+earlier pilot set and `default.yaml` stays on offline mocks so tests never
+need keys.
+
+Systems a run can name: `excre`, `cot:<model>`, `sc:<model>`, `mad`,
+`reconcile`, `judge`; the ablations `excre_bare` (no anchor, no devil's
+advocate), `excre_noda`, `excre_noanchor` and `excre_same:<model>` (three
+seeded copies of one model); and `excre_adv` / `mad_adv` with a rotating
+saboteur.
 
 ## Running on Kaggle (incremental)
 
-`kaggle_run.py` works through `configs/kaggle_plan.yaml` a block of items at a
-time and stops when the free API quotas or the session clock run out. Results,
-the sampled benchmark items, the response cache, `progress.md`,
-`sessions.jsonl` and a `report.txt` per dataset are written to `runs/phase1/`,
-which is committed and pushed every 30 minutes and at the end of the session.
-The next session clones the repository and continues from the last commit.
+`kaggle_run.py` works through the stages in `configs/kaggle_plan.yaml` in
+order. Inside a stage every system gains one block of items per pass, so they
+stay on the same questions. A session ends when a provider's free quota or the
+session clock runs out; the next one continues from the last commit.
+
+Everything a run produces is committed and pushed every 30 minutes and at the
+end of the session:
+
+```
+runs/main/<dataset>/<system>.jsonl   one record per item, with the full trail
+runs/main/data/                      the sampled benchmark items
+runs/main/progress.md                done/total and accuracy per stage
+runs/main/sessions.jsonl             one line per session
+runs/main/manifest.json              models, settings and prompt hash at the start
+runs/cache/                          every model response, keyed by request
+```
+
+A run folder is tied to its manifest: if the models, settings or prompts
+change later, `kaggle_run.py` stops rather than mix two setups in one folder.
+The tables for the paper come from `python paper_report.py --run runs/main`.
 
 One-time setup:
 
 1. Create a fine-grained GitHub token with *Contents: read and write* on this
    repository only.
 2. In a Kaggle notebook, turn Internet on and add these under Add-ons -> Secrets
-   (attached to the notebook): `GROQ_API_KEY`, `GEMINI_API_KEY`, `GITHUB_TOKEN`,
-   plus `DEEPSEEK_API_KEY` if that model is re-enabled.
+   (attached to the notebook): `GROQ_API_KEY`, `GEMINI_API_KEY`, `GITHUB_TOKEN`.
 3. Put this in a single cell:
 
 ```python
@@ -100,7 +124,7 @@ import base64, os
 from kaggle_secrets import UserSecretsClient
 
 secrets = UserSecretsClient()
-for key in ["GROQ_API_KEY", "GEMINI_API_KEY", "DEEPSEEK_API_KEY", "GITHUB_TOKEN"]:
+for key in ["GROQ_API_KEY", "GEMINI_API_KEY", "GITHUB_TOKEN"]:
     try:
         os.environ[key] = secrets.get_secret(key)
     except Exception:
@@ -123,7 +147,9 @@ os.environ.update({"GIT_CONFIG_COUNT": "1",
    session stopped.
 
 When a provider says its daily quota is used up, rejects the key, or stays
-unreachable for six minutes, that model is benched for the rest of the session
-and only jobs that don't need it keep going. Don't run two sessions at once:
+unreachable for six minutes, that model is benched, the current block is
+finished with the models still up, and the session ends. Groq's free quota is
+a daily token allowance per model, so one session a day is all it can feed.
+Don't run two sessions at once:
 both would append to the same files. The same script runs locally with the
 keys from `.env` (leave off `--push` to keep results uncommitted).

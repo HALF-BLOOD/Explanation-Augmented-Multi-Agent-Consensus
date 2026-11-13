@@ -26,18 +26,16 @@ def _generate_path(model, user_prompt, system, gen, tokens):
     tokens["prompt"] += usage.get("prompt_tokens", 0)
     tokens["completion"] += usage.get("completion_tokens", 0)
     path = schema.parse_path(text)
+    cut = usage.get("finish") == "length"
     if not path["parsed"]:
-        # Retry with explicit format prompt
-        retry_prompt = (user_prompt + "\n\nYour previous reply could not be "
-                        "parsed as the required JSON object. Reply with only "
-                        "the JSON object this time.")
-        text2, usage2 = _call(model, retry_prompt, system, gen)
+        text2, usage2 = _call(model, user_prompt + prompts.RETRY_SCHEMA,
+                              system, gen)
         tokens["prompt"] += usage2.get("prompt_tokens", 0)
         tokens["completion"] += usage2.get("completion_tokens", 0)
         path2 = schema.parse_path(text2)
         if path2["parsed"]:
-            return path2, text2, True
-    return path, text, False
+            return path2, text2, {"repaired": True, "truncated": cut}
+    return path, text, {"repaired": False, "truncated": cut}
 
 
 def run_excre(item, models, simfn, cfg, saboteur=None):
@@ -65,13 +63,13 @@ def run_excre(item, models, simfn, cfg, saboteur=None):
     current = {}
     round0 = {}
     for m in models:
-        path, raw, repaired = _generate_path(
+        path, raw, flags = _generate_path(
             m, prompts.initial(item["question"], fmt), system_for(m), gen,
             tokens)
         current[m.name] = path
         round0[m.name] = path
         trail.append({"round": 0, "model": m.name, "raw": raw,
-                      "path": path, "repaired": repaired})
+                      "path": path, **flags})
 
     prev_imrc = imrc_group(list(current.values()), simfn, imrc_w, ev_thr)["imrc"]
     converged = False
@@ -92,11 +90,11 @@ def run_excre(item, models, simfn, cfg, saboteur=None):
                      for p in models if p.name != m.name]
             prompt = prompts.revision(item["question"], fmt, own, anchor,
                                       peers, devils_advocate=(idx == da_index))
-            path, raw, repaired = _generate_path(m, prompt, system_for(m),
-                                                 gen, tokens)
+            path, raw, flags = _generate_path(m, prompt, system_for(m),
+                                              gen, tokens)
             revised[m.name] = path
             trail.append({"round": r, "model": m.name, "raw": raw,
-                          "path": path, "repaired": repaired,
+                          "path": path, **flags,
                           "devils_advocate": idx == da_index})
         current = revised
 
@@ -128,7 +126,8 @@ def run_excre(item, models, simfn, cfg, saboteur=None):
         "components": comps,
         "imrc_all": imrc_all,
         "imrc_coalition": imrc_coal,
-        "fragility": fragility(agreement, imrc_coal["imrc"]),
+        "fragility": fragility(agreement, imrc_coal["imrc"],
+                               imrc_coal["pairs"]),
         "per_model": {n: {"answer": p["answer"],
                           "confidence": p["confidence"],
                           "parsed": p["parsed"]}

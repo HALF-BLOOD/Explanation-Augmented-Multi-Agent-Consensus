@@ -8,7 +8,13 @@ import traceback
 from . import baselines
 from .data import append_jsonl, is_correct, make_normaliser, read_jsonl
 from .engine import run_excre
-from .llm import ModelUnavailable
+from .llm import ModelUnavailable, Seeded
+
+# excre_<name> switches parts of the loop off; excre_same:<model> runs three
+# seeded copies of one model in place of the mixed group
+VARIANTS = {"bare": {"devils_advocate": False, "anchor": False},
+            "noda": {"devils_advocate": False},
+            "noanchor": {"anchor": False}}
 
 
 def done_ids(path):
@@ -65,6 +71,7 @@ def run_system(system, items, models, simfn, cfg, out_path,
             rec["correct"] = is_correct(item, rec["answer"])
             rec["gold"] = item["gold"]
             rec["dataset"] = item["dataset"]
+            rec["at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
         except (KeyboardInterrupt, ModelUnavailable):
             raise
         except Exception:
@@ -83,35 +90,53 @@ def run_system(system, items, models, simfn, cfg, out_path,
 
 
 def models_needed(system, models):
-    if system.startswith(("cot", "sc")):
-        prefix = system.split(":", 1)[0]
-        return {_pick_model(system, prefix, models).name}
+    if ":" in system or system.startswith(("cot", "sc")):
+        return {_pick_model(system, models).name}
     return {m.name for m in models}
 
 
+def _variant(system, models, cfg):
+    name = system.split(":", 1)[0]
+    if name == "excre":
+        return models, cfg
+    kind = name.split("_", 1)[1]
+    if kind == "same":
+        base = _pick_model(system, models)
+        return [Seeded(base, i) for i in range(len(models))], cfg
+    return models, dict(cfg, excre=dict(cfg["excre"], **VARIANTS[kind]))
+
+
+def _saboteur(item, models, k):
+    return {"model": models[k % len(models)].name,
+            "target": plausible_wrong_answer(item)}
+
+
 def _dispatch(system, item, models, simfn, cfg, adversarial, k):
-    if system == "excre":
-        saboteur = None
-        if adversarial:
-            saboteur = {"model": models[k % len(models)].name,
-                        "target": plausible_wrong_answer(item)}
-        return run_excre(item, models, simfn, cfg, saboteur=saboteur)
+    if system.startswith("excre"):
+        models, cfg = _variant(system, models, cfg)
+        saboteur = _saboteur(item, models, k) if adversarial else None
+        rec = run_excre(item, models, simfn, cfg, saboteur=saboteur)
+        rec["system"] = system + ("_adv" if adversarial else "")
+        return rec
     if system == "mad":
-        return baselines.run_mad(item, models, cfg)
+        saboteur = _saboteur(item, models, k) if adversarial else None
+        rec = baselines.run_mad(item, models, cfg, saboteur=saboteur)
+        rec["system"] = system + ("_adv" if adversarial else "")
+        return rec
     if system == "reconcile":
         return baselines.run_reconcile(item, models, cfg)
     if system == "judge":
         return baselines.run_judge(item, models, cfg)
     if system.startswith("cot"):
-        model = _pick_model(system, "cot", models)
+        model = _pick_model(system, models)
         return baselines.run_cot(item, model, cfg)
     if system.startswith("sc"):
-        model = _pick_model(system, "sc", models)
+        model = _pick_model(system, models)
         return baselines.run_self_consistency(item, model, cfg)
     raise ValueError(f"unknown system: {system}")
 
 
-def _pick_model(system, prefix, models):
+def _pick_model(system, models):
     # Resolve specific model target if indicated (e.g. "cot:model_name")
     if ":" in system:
         name = system.split(":", 1)[1]

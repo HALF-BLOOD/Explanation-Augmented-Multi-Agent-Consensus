@@ -12,7 +12,8 @@ try:
 except ImportError:
     requests = None
 
-_last_call = {}  # base_url -> monotonic time of last request
+_last_call = {}   # (base_url, model) -> monotonic time of last request
+_hold_until = {}  # (base_url, model) -> when the per-minute token window reopens
 
 
 class ModelUnavailable(RuntimeError):
@@ -22,6 +23,13 @@ class ModelUnavailable(RuntimeError):
         super().__init__(f"{model}: {why}")
         self.model = model
         self.why = why
+
+
+def _seconds(text):
+    # groq writes reset times as "1m26.4s" or "637ms"
+    units = {"h": 3600, "m": 60, "s": 1, "ms": 0.001}
+    return sum(float(n) * units[u]
+               for n, u in re.findall(r"([\d.]+)(ms|h|m|s)", text or ""))
 
 
 def _daily_limit(r):
@@ -62,7 +70,8 @@ class DiskCache:
 class OpenAICompatModel:
     def __init__(self, name, base_url, model, api_key_env,
                  min_interval_s=1.0, cache=None, timeout=240,
-                 max_tokens_override=None, extra_payload=None):
+                 max_tokens_override=None, extra_payload=None,
+                 token_floor=0):
         self.name = name
         self.base_url = base_url.rstrip("/")
         self.model = model
@@ -74,6 +83,7 @@ class OpenAICompatModel:
         # reasoning tokens, so they need a higher cap than the global one
         self.max_tokens_override = max_tokens_override
         self.extra_payload = extra_payload or {}
+        self.token_floor = token_floor
 
     def _key(self, payload):
         return json.dumps({"u": self.base_url, "p": payload}, sort_keys=True)
@@ -100,19 +110,23 @@ class OpenAICompatModel:
         if not api_key:
             raise ModelUnavailable(self.name, f"{self.api_key_env} is not set")
 
-        wait = self.min_interval_s - (time.monotonic() - _last_call.get(self.base_url, 0))
-        if wait > 0:
-            time.sleep(wait)
+        gate = (self.base_url, self.model)
 
         # hard ceiling on time spent inside one logical call. nvidia's free
         # endpoint once hung every request for hours; past this point the
         # model is treated as gone for the session and the item stays pending
         deadline = time.monotonic() + 6 * 60
         backoff = 2.0
+        wasted = None
         for attempt in range(6):
             if time.monotonic() > deadline:
                 break
-            _last_call[self.base_url] = time.monotonic()
+            now = time.monotonic()
+            wait = max(self.min_interval_s - (now - _last_call.get(gate, 0)),
+                       _hold_until.get(gate, 0) - now)
+            if wait > 0:
+                time.sleep(min(wait, 90))
+            _last_call[gate] = time.monotonic()
             try:
                 r = requests.post(
                     self.base_url + "/chat/completions",
@@ -130,12 +144,28 @@ class OpenAICompatModel:
                 body = r.json()
                 text = body["choices"][0]["message"]["content"] or ""
                 u = body.get("usage") or {}
-                usage = {"prompt_tokens": u.get("prompt_tokens", 0),
-                         "completion_tokens": u.get("completion_tokens", 0)}
+                spent = u.get("prompt_tokens", 0)
+                # gemini leaves thinking tokens out of completion_tokens
+                usage = {"prompt_tokens": spent,
+                         "completion_tokens": max(u.get("completion_tokens", 0),
+                                                  u.get("total_tokens", 0) - spent),
+                         "finish": body["choices"][0].get("finish_reason")}
+                left = r.headers.get("x-ratelimit-remaining-tokens")
+                if left is not None and float(left) < self.token_floor:
+                    _hold_until[gate] = time.monotonic() + _seconds(
+                        r.headers.get("x-ratelimit-reset-tokens"))
+                if not text.strip() and usage["finish"] == "length" and not wasted:
+                    # the whole cap went on hidden reasoning: once more with room
+                    wasted = usage
+                    payload = dict(payload, max_tokens=2 * payload["max_tokens"])
+                    continue
+                if wasted:
+                    usage["prompt_tokens"] += wasted["prompt_tokens"]
+                    usage["completion_tokens"] += wasted["completion_tokens"]
                 if self.cache:
                     self.cache.put(key, {"text": text, "usage": usage})
                 return text, usage
-            if r.status_code in (401, 403, 404):
+            if r.status_code in (401, 403, 404, 410):
                 raise ModelUnavailable(self.name, f"HTTP {r.status_code}: {r.text[:200]}")
             if r.status_code == 429 and _daily_limit(r):
                 raise ModelUnavailable(self.name, "daily quota used up")
@@ -151,6 +181,18 @@ class OpenAICompatModel:
             raise RuntimeError(f"{self.name}: HTTP {r.status_code}: {r.text[:300]}")
         raise ModelUnavailable(self.name, "unreachable or rate-limited "
                                           "beyond the retry budget")
+
+
+class Seeded:
+    """One model under another name and seed, for same-model agent groups."""
+
+    def __init__(self, model, seed):
+        self.model = model
+        self.seed = seed
+        self.name = f"{model.name}#{seed}"
+
+    def chat(self, messages, **kw):
+        return self.model.chat(messages, **dict(kw, seed=self.seed))
 
 
 class MockModel:
@@ -241,6 +283,7 @@ def build_models(model_cfgs, cache_dir=None, use_cache=True):
                 min_interval_s=cfg.get("min_interval_s", 1.0),
                 max_tokens_override=cfg.get("max_tokens_override"),
                 extra_payload=cfg.get("extra_payload"),
+                token_floor=cfg.get("token_floor", 0),
                 cache=cache))
         else:
             raise ValueError(f"unknown model kind: {kind}")

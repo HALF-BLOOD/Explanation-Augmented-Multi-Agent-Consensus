@@ -83,10 +83,14 @@ def extract_final_answer(text):
     if not text:
         return ""
     m = None
-    for m in re.finditer(r"final answer\s*[:=]\s*(.+)", text, re.IGNORECASE):
+    for m in re.finditer(r"final answer\s*\**\s*[:=]", text, re.IGNORECASE):
         pass
     if m:
-        return m.group(1).strip().splitlines()[0]
+        # models like to bold the label and put the answer on the next line
+        for line in text[m.end():].splitlines():
+            line = re.sub(r"[*`]+", "", line).strip()
+            if line:
+                return line
     tail = text[-300:]
     nums = re.findall(r"-?\d[\d,]*(?:\.\d+)?", tail)
     if nums:

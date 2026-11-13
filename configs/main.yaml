@@ -1,0 +1,56 @@
+# model set and settings for the paper runs. kaggle_run.py refuses to continue
+# a run folder if anything in here (or a prompt) changes after the first item.
+models:
+  - name: gptoss120b
+    kind: openai_compat
+    base_url: https://api.groq.com/openai/v1
+    model: openai/gpt-oss-120b
+    api_key_env: GROQ_API_KEY
+    min_interval_s: 2.5
+    max_tokens_override: 2000   # reasoning tokens count against the cap
+    token_floor: 5000           # groq free tier: 8k tokens/min per model
+  - name: qwen27b
+    kind: openai_compat
+    base_url: https://api.groq.com/openai/v1
+    model: qwen/qwen3.8-27b
+    api_key_env: GROQ_API_KEY
+    min_interval_s: 2.5
+    max_tokens_override: 2000
+    token_floor: 5000
+  - name: gemini-flash-lite
+    kind: openai_compat
+    base_url: https://generativelanguage.googleapis.com/v1beta/openai
+    model: gemini-3.5-flash-lite
+    api_key_env: GEMINI_API_KEY
+    min_interval_s: 6
+
+excre:
+  rounds: 3
+  devils_advocate: true
+  anchor: true
+  convergence_eps: 0.02
+  temperature: 0.3
+  max_tokens: 900
+
+imrc:
+  embedder: sbert
+  sbert_model: sentence-transformers/all-mpnet-base-v2
+  alpha: 0.5
+  beta: 0.2
+  gamma: 0.3
+  evidence_threshold: 0.5
+
+trust:
+  w_agreement: 0.35
+  w_imrc: 0.35
+  w_confidence: 0.20
+  w_converged: 0.10
+
+sc:
+  k: 5
+  temperature: 0.7
+
+judge:
+  model: gptoss120b
+
+cache: true

@@ -1,20 +1,61 @@
-# what the kaggle sessions grind through. Each pass adds `block` items to
-# every job below (in this order), so when the quota dies mid-session all
-# systems have seen roughly the same items and still pair up for McNemar.
-config: configs/pilot.yaml
-out: runs/phase1
-n: 300
+# Stages run strictly in order; inside a stage every job gains `block` items
+# per pass so the systems stay on the same questions. Sized for groq's free
+# 200k tokens/day per model: about 20 core questions a day on easy items,
+# fewer when the agents disagree and run all three rounds.
+config: configs/main.yaml
+out: runs/main
+cache: runs/cache
 block: 10
 
-datasets: [gsm8k, strategyqa, truthfulqa, mmlu]
+stages:
+  - name: core
+    n: 100
+    datasets: [gsm8k, strategyqa, truthfulqa]
+    systems:
+      - cot:gptoss120b
+      - cot:qwen27b
+      - cot:gemini-flash-lite
+      - excre
+      - mad                       # round 0 is the three cot calls, cached
+      - sc:gemini-flash-lite
 
-systems:
-  - excre
-  - cot:gptoss120b
-  - cot:qwen27b
-  - cot:gemini-flash
-  - judge            # its three cot calls are cache hits from the lines above
-  - mad
-  - reconcile
-  - sc:gptoss120b
-  - excre_adv        # saboteur rotates over the three models
+  - name: saboteur
+    n: 50
+    datasets: [gsm8k, truthfulqa]
+    systems: [excre_adv, mad_adv]
+
+  - name: ablations
+    n: 50
+    datasets: [gsm8k, strategyqa]
+    systems: [excre_bare, excre_noda, excre_noanchor]
+
+  - name: same-model
+    n: 50
+    datasets: [gsm8k, strategyqa]
+    systems: ["excre_same:qwen27b"]
+
+  - name: more-baselines
+    n: 100
+    datasets: [gsm8k, strategyqa, truthfulqa]
+    systems: [judge, reconcile, "sc:gptoss120b", "sc:qwen27b"]
+
+  - name: medqa
+    n: 100
+    datasets: [medqa]
+    systems:
+      - cot:gptoss120b
+      - cot:qwen27b
+      - cot:gemini-flash-lite
+      - excre
+      - mad
+
+  - name: extend
+    n: 300
+    datasets: [gsm8k, strategyqa, truthfulqa, mmlu]
+    systems:
+      - cot:gptoss120b
+      - cot:qwen27b
+      - cot:gemini-flash-lite
+      - excre
+      - mad
+      - sc:gemini-flash-lite

@@ -45,6 +45,8 @@ def trust_score(components, weights):
     return sum(w * v for w, v in pairs) / total
 
 
-def fragility(agreement, imrc_coalition):
+def fragility(agreement, imrc_coalition, pairs=1):
     """Measure divergence between answer agreement and rationale congruence."""
+    if not pairs:
+        return 0.0
     return agreement * (1.0 - imrc_coalition)

@@ -21,17 +21,8 @@ models:
     min_interval_s: 2.5
     max_tokens_override: 3000
 
-  # nvidia's free NIM endpoint served deepseek fine in the morning smoke
-  # test, then started hanging every request by early afternoon (their
-  # queue, not our code). Kept as a spare fourth family -- re-enable when
-  # it behaves, or route deepseek through openrouter instead.
-  # - name: deepseek-flash
-  #   kind: openai_compat
-  #   base_url: https://integrate.api.nvidia.com/v1
-  #   model: deepseek-ai/deepseek-v4-flash-0731
-  #   api_key_env: DEEPSEEK_API_KEY   # nvapi- key from build.nvidia.com
-  #   min_interval_s: 1.6
-  #   max_tokens_override: 3000
+  # deepseek-v4-flash-0731 on nvidia NIM was the third family in the first
+  # smoke test; nvidia retired it on 21 Sep 2026 (HTTP 410).
 
 excre:
   rounds: 3

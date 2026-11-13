@@ -48,7 +48,8 @@ def rescore(rec, item, simfn, cfg):
     out["components"] = comps
     out["trust"] = trust_score(comps, cfg["trust"])
     out["signal"] = out["trust"]
-    out["fragility"] = fragility(agreement, imrc_coal["imrc"])
+    out["fragility"] = fragility(agreement, imrc_coal["imrc"],
+                                 imrc_coal["pairs"])
     out["rescored_with"] = {"embedder": simfn.name, "alpha": w[0],
                             "beta": w[1], "gamma": w[2]}
     return out
