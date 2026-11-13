@@ -1,0 +1,1 @@
+{"start": "2026-11-13T06:54:31+00:00", "hours": 0.78, "added": 97, "stopped": "stage 'core' waiting on qwen27b", "benched": {"qwen27b": "unreachable or rate-limited beyond the retry budget"}, "where": "Interactive"}
