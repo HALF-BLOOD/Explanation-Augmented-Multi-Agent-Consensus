@@ -182,7 +182,8 @@ class OpenAICompatModel:
             if r.status_code in (401, 403, 404, 410):
                 raise ModelUnavailable(self.name, f"HTTP {r.status_code}: {r.text[:200]}")
             if r.status_code == 429 and _daily_limit(r):
-                raise ModelUnavailable(self.name, "daily quota used up")
+                raise ModelUnavailable(self.name,
+                                       "daily quota used up" + _limit_kind(r))
             if r.status_code in (429, 500, 502, 503):
                 retry_after = r.headers.get("retry-after")
                 delay = float(retry_after) if retry_after else backoff
