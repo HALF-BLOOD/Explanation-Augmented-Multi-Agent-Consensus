@@ -1,0 +1,58 @@
+{
+ "started": "2026-11-13T06:53:50+00:00",
+ "frozen": {
+  "models": [
+   {
+    "name": "gptoss120b",
+    "base_url": "https://api.groq.com/openai/v1",
+    "model": "openai/gpt-oss-120b",
+    "max_tokens_override": 2000,
+    "extra_payload": null
+   },
+   {
+    "name": "qwen27b",
+    "base_url": "https://api.groq.com/openai/v1",
+    "model": "qwen/qwen3.8-27b",
+    "max_tokens_override": 2000,
+    "extra_payload": null
+   },
+   {
+    "name": "gemini-flash-lite",
+    "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
+    "model": "gemini-3.5-flash-lite",
+    "max_tokens_override": null,
+    "extra_payload": null
+   }
+  ],
+  "excre": {
+   "rounds": 3,
+   "devils_advocate": true,
+   "anchor": true,
+   "convergence_eps": 0.02,
+   "temperature": 0.3,
+   "max_tokens": 900
+  },
+  "imrc": {
+   "embedder": "sbert",
+   "sbert_model": "sentence-transformers/all-mpnet-base-v2",
+   "alpha": 0.5,
+   "beta": 0.2,
+   "gamma": 0.3,
+   "evidence_threshold": 0.5
+  },
+  "trust": {
+   "w_agreement": 0.35,
+   "w_imrc": 0.35,
+   "w_confidence": 0.2,
+   "w_converged": 0.1
+  },
+  "sc": {
+   "k": 5,
+   "temperature": 0.7
+  },
+  "judge": {
+   "model": "gptoss120b"
+  },
+  "prompts": "4a59f8a0125c253b"
+ }
+}
