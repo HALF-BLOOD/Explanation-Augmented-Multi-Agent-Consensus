@@ -1,68 +1,52 @@
 # runs/v2
 
-updated 2026-11-15 08:14 UTC, +48 this session, stopped: stage 'core' waiting on qwen27b  
+updated 2026-11-15 11:37 UTC, +8 this session, stopped: question 1 waiting on gptoss120b, qwen27b  
+gptoss120b benched: daily quota used up (TPD limit 200000)  
 qwen27b benched: daily quota used up (TPD limit 200000)
+
+questions finished by every system that runs them
+
+| gsm8k | strategyqa | truthfulqa | medqa | mmlu |
+|---|---|---|---|---|
+| 1/60 | 0/60 | 0/60 | 0/60 | 0/60 |
 
 done / total (accuracy so far)
 
 ## core
 
-| system | gsm8k | strategyqa | truthfulqa |
-|---|---|---|---|
-| cot:gptoss120b | 10/100 (90%) | 10/100 (80%) | 10/100 (100%) |
-| cot:qwen27b | 10/100 (90%) | 10/100 (40%) | 10/100 (80%) |
-| cot:gemini-flash-lite | 10/100 (90%) | 10/100 (70%) | 10/100 (80%) |
-| excre | 10/100 (90%) | 10/100 (50%) | 3/100 (100%) |
-| mad | 10/100 (90%) | 10/100 (80%) | 0/100 |
-| sc:gemini-flash-lite | 10/100 (90%) | 10/100 (70%) | 10/100 (90%) |
+| system | gsm8k | strategyqa | truthfulqa | medqa | mmlu |
+|---|---|---|---|---|---|
+| cot:gptoss120b | 10/60 (90%) | 10/60 (80%) | 10/60 (100%) | 0/60 | 0/60 |
+| cot:qwen27b | 10/60 (90%) | 10/60 (40%) | 10/60 (80%) | 0/60 | 0/60 |
+| cot:gemini-flash-lite | 10/60 (90%) | 10/60 (70%) | 10/60 (80%) | 1/60 (100%) | 1/60 (100%) |
+| excre | 10/60 (90%) | 10/60 (50%) | 3/60 (100%) | 0/60 | 0/60 |
+| mad | 10/60 (90%) | 10/60 (80%) | 0/60 | 0/60 | 0/60 |
+| sc:gemini-flash-lite | 10/60 (90%) | 10/60 (70%) | 10/60 (90%) | 1/60 (100%) | 1/60 (100%) |
 
 ## saboteur
 
 | system | gsm8k | truthfulqa |
 |---|---|---|
-| excre_adv | 0/50 | 0/50 |
-| mad_adv | 0/50 | 0/50 |
+| excre_adv | 1/40 (100%) | 0/40 |
+| mad_adv | 1/40 (100%) | 0/40 |
 
 ## ablations
 
-| system | gsm8k | strategyqa |
-|---|---|---|
-| excre_bare | 0/50 | 0/50 |
-| excre_noda | 0/50 | 0/50 |
-| excre_noanchor | 0/50 | 0/50 |
+| system | strategyqa |
+|---|---|
+| excre_bare | 1/40 (100%) |
+| excre_noda | 1/40 (0%) |
+| excre_noanchor | 0/40 |
 
 ## same-model
 
-| system | gsm8k | strategyqa |
-|---|---|---|
-| excre_same:qwen27b | 0/50 | 0/50 |
-
-## more-baselines
-
-| system | gsm8k | strategyqa | truthfulqa |
-|---|---|---|---|
-| judge | 0/100 | 0/100 | 0/100 |
-| reconcile | 0/100 | 0/100 | 0/100 |
-| sc:gptoss120b | 0/100 | 0/100 | 0/100 |
-| sc:qwen27b | 0/100 | 0/100 | 0/100 |
-
-## medqa
-
-| system | medqa |
+| system | strategyqa |
 |---|---|
-| cot:gptoss120b | 0/100 |
-| cot:qwen27b | 0/100 |
-| cot:gemini-flash-lite | 0/100 |
-| excre | 0/100 |
-| mad | 0/100 |
+| excre_same:qwen27b | 0/30 |
 
-## extend
+## baselines
 
-| system | gsm8k | strategyqa | truthfulqa | mmlu |
-|---|---|---|---|---|
-| cot:gptoss120b | 10/300 (90%) | 10/300 (80%) | 10/300 (100%) | 0/300 |
-| cot:qwen27b | 10/300 (90%) | 10/300 (40%) | 10/300 (80%) | 0/300 |
-| cot:gemini-flash-lite | 10/300 (90%) | 10/300 (70%) | 10/300 (80%) | 0/300 |
-| excre | 10/300 (90%) | 10/300 (50%) | 3/300 (100%) | 0/300 |
-| mad | 10/300 (90%) | 10/300 (80%) | 0/300 | 0/300 |
-| sc:gemini-flash-lite | 10/300 (90%) | 10/300 (70%) | 10/300 (90%) | 0/300 |
+| system | strategyqa | truthfulqa | medqa |
+|---|---|---|---|
+| judge | 0/30 | 0/30 | 0/30 |
+| reconcile | 0/30 | 0/30 | 0/30 |

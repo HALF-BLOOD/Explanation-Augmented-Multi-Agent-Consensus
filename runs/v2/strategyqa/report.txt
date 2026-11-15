@@ -5,6 +5,8 @@ cot_gemini-flash-lite    10   70.0 [ 39.7, 89.2]       305
 cot_gptoss120b      10   80.0 [ 49.0, 94.3]       654
 cot_qwen27b         10   40.0 [ 16.8, 68.7]       725
 excre               10   50.0 [ 23.7, 76.3]     24121
+excre_bare           1  100.0 [ 20.7,100.0]     19510
+excre_noda           1    0.0 [  0.0, 79.3]     20194
 mad                 10   80.0 [ 49.0, 94.3]     18879
 sc_gemini-flash-lite    10   70.0 [ 39.7, 89.2]      1549
 
@@ -13,6 +15,8 @@ baseline             n  only-excre  only-base        p    p_adj
 cot_gemini-flash-lite    10           0          2   0.5000   1.0000
 cot_gptoss120b      10           1          4   0.3750   1.0000
 cot_qwen27b         10           2          1   1.0000   1.0000
+excre_bare           1           0          1   1.0000   1.0000
+excre_noda           1           0          0   1.0000   1.0000
 mad                 10           0          3   0.2500   1.0000
 sc_gemini-flash-lite    10           0          2   0.5000   1.0000
 
