@@ -12,8 +12,43 @@ try:
 except ImportError:
     requests = None
 
-_last_call = {}   # (base_url, model) -> monotonic time of last request
-_hold_until = {}  # (base_url, model) -> when the per-minute token window reopens
+_last_call = {}      # (base_url, model, [key]) -> monotonic time of last request
+_hold_until = {}     # (base_url, model, [key]) -> when the per-minute token window reopens
+_exhausted_keys = set()  # set of (base_url, model, key) benched for this session
+
+
+def reset_rotation_state():
+    """Reset rate limiting and key exhaustion state for testing or new sessions."""
+    _last_call.clear()
+    _hold_until.clear()
+    _exhausted_keys.clear()
+
+
+def resolve_api_keys(api_key_env):
+    """Resolve a list of API keys from env var name(s), comma-separated values, or numbered suffixes."""
+    if isinstance(api_key_env, (list, tuple)):
+        env_names = list(api_key_env)
+    else:
+        env_names = [api_key_env]
+        # Check numbered suffixes like GROQ_API_KEY_1, GROQ_API_KEY_2...
+        for i in range(1, 21):
+            var_name = f"{api_key_env}_{i}"
+            if var_name in os.environ and var_name not in env_names:
+                env_names.append(var_name)
+        plural = f"{api_key_env}S"
+        if plural in os.environ and plural not in env_names:
+            env_names.append(plural)
+
+    keys = []
+    for name in env_names:
+        val = os.environ.get(name, "").strip()
+        if not val:
+            continue
+        for part in re.split(r"[,;\n]+", val):
+            k = part.strip().strip("'\"")
+            if k and k not in keys:
+                keys.append(k)
+    return keys
 
 
 class ModelUnavailable(RuntimeError):
@@ -91,6 +126,7 @@ class OpenAICompatModel:
         self.token_floor = token_floor
         self.output_tpm = output_tpm
         self.send_seed = send_seed
+        self._key_cursor = 0
 
     def _key(self, payload):
         return json.dumps({"u": self.base_url, "p": payload}, sort_keys=True)
@@ -113,11 +149,11 @@ class OpenAICompatModel:
 
         if requests is None:
             raise RuntimeError("pip install requests to use real models")
-        api_key = os.environ.get(self.api_key_env, "")
-        if not api_key:
+        all_keys = resolve_api_keys(self.api_key_env)
+        if not all_keys:
             raise ModelUnavailable(self.name, f"{self.api_key_env} is not set")
 
-        gate = (self.base_url, self.model)
+        gate_m = (self.base_url, self.model)
         if not self.send_seed:
             # gemini's endpoint rejects the field; the seed still keys the cache
             payload.pop("seed", None)
@@ -130,12 +166,39 @@ class OpenAICompatModel:
         wasted = None
         failures = 0
         while failures < 6 and time.monotonic() < deadline:
-            now = time.monotonic()
-            wait = max(self.min_interval_s - (now - _last_call.get(gate, 0)),
-                       _hold_until.get(gate, 0) - now)
+            active_keys = [k for k in all_keys
+                           if (self.base_url, self.model, k) not in _exhausted_keys]
+            if not active_keys:
+                raise ModelUnavailable(
+                    self.name,
+                    f"daily quota used up across all {len(all_keys)} keys"
+                    if len(all_keys) > 1 else "daily quota used up")
+
+            # Determine key wait time based on pacing and interval
+            def key_wait(k):
+                gate_k = (self.base_url, self.model, k)
+                t_now = time.monotonic()
+                return max(self.min_interval_s - (t_now - _last_call.get(gate_k, 0)),
+                           _hold_until.get(gate_k, 0) - t_now, 0)
+
+            n_active = len(active_keys)
+            ordered_keys = [active_keys[(self._key_cursor + i) % n_active]
+                            for i in range(n_active)]
+            # If current candidate has to wait but another active key is ready now, rotate to it
+            if key_wait(ordered_keys[0]) > 0:
+                ordered_keys.sort(key=key_wait)
+
+            api_key = ordered_keys[0]
+            gate_k = (self.base_url, self.model, api_key)
+
+            wait = key_wait(api_key)
             if wait > 0:
                 time.sleep(min(wait, 90))
-            _last_call[gate] = time.monotonic()
+
+            t_req = time.monotonic()
+            _last_call[gate_k] = t_req
+            _last_call[gate_m] = t_req
+
             try:
                 r = requests.post(
                     self.base_url + "/chat/completions",
@@ -149,7 +212,9 @@ class OpenAICompatModel:
                       f"attempt {failures}/6", flush=True)
                 time.sleep(backoff + random.uniform(0, 1))
                 backoff = min(backoff * 2, 60)
+                self._key_cursor += 1
                 continue
+
             if r.status_code == 200:
                 body = r.json()
                 text = body["choices"][0]["message"]["content"] or ""
@@ -162,12 +227,16 @@ class OpenAICompatModel:
                          "finish": body["choices"][0].get("finish_reason")}
                 left = r.headers.get("x-ratelimit-remaining-tokens")
                 if left is not None and float(left) < self.token_floor:
-                    _hold_until[gate] = time.monotonic() + _seconds(
+                    reset_time = time.monotonic() + _seconds(
                         r.headers.get("x-ratelimit-reset-tokens"))
+                    _hold_until[gate_k] = reset_time
+                    _hold_until[gate_m] = reset_time
                 if self.output_tpm:
                     refill = 60 * usage["completion_tokens"] / self.output_tpm
-                    _hold_until[gate] = max(_hold_until.get(gate, 0),
-                                            time.monotonic() + refill)
+                    new_hold = max(_hold_until.get(gate_k, 0),
+                                   time.monotonic() + refill)
+                    _hold_until[gate_k] = new_hold
+                    _hold_until[gate_m] = new_hold
                 if not text.strip() and usage["finish"] == "length" and not wasted:
                     # the whole cap went on hidden reasoning: once more with room
                     wasted = usage
@@ -178,12 +247,37 @@ class OpenAICompatModel:
                     usage["completion_tokens"] += wasted["completion_tokens"]
                 if self.cache:
                     self.cache.put(key, {"text": text, "usage": usage})
+                self._key_cursor += 1
                 return text, usage
-            if r.status_code in (401, 403, 404, 410):
+
+            if r.status_code in (401, 403):
+                _exhausted_keys.add(gate_k)
+                tag = f"...{api_key[-4:]}" if len(api_key) > 4 else "key"
+                active_remaining = [k for k in all_keys
+                                    if (self.base_url, self.model, k) not in _exhausted_keys]
+                if active_remaining:
+                    print(f"    [{self.name}] key {tag} unauthorized (HTTP {r.status_code}), "
+                          f"switching to next key ({len(active_remaining)} active remaining)...", flush=True)
+                    self._key_cursor += 1
+                    continue
                 raise ModelUnavailable(self.name, f"HTTP {r.status_code}: {r.text[:200]}")
+
+            if r.status_code in (404, 410):
+                raise ModelUnavailable(self.name, f"HTTP {r.status_code}: {r.text[:200]}")
+
             if r.status_code == 429 and _daily_limit(r):
+                _exhausted_keys.add(gate_k)
+                tag = f"...{api_key[-4:]}" if len(api_key) > 4 else "key"
+                active_remaining = [k for k in all_keys
+                                    if (self.base_url, self.model, k) not in _exhausted_keys]
+                if active_remaining:
+                    print(f"    [{self.name}] key {tag} daily quota used up{_limit_kind(r)}, "
+                          f"rotating to next key ({len(active_remaining)} active remaining)...", flush=True)
+                    self._key_cursor += 1
+                    continue
                 raise ModelUnavailable(self.name,
                                        "daily quota used up" + _limit_kind(r))
+
             if r.status_code in (429, 500, 502, 503):
                 retry_after = r.headers.get("retry-after")
                 delay = float(retry_after) if retry_after else backoff
@@ -191,6 +285,15 @@ class OpenAICompatModel:
                 # per-minute limits are pacing, not failure: only the deadline
                 # above ends them, so a busy minute can't bench a model
                 if r.status_code == 429:
+                    _hold_until[gate_k] = time.monotonic() + delay
+                    _hold_until[gate_m] = time.monotonic() + delay
+                    tag = f"...{api_key[-4:]}" if len(api_key) > 4 else "key"
+                    other_ready = [k for k in active_keys if k != api_key and key_wait(k) == 0]
+                    if other_ready:
+                        print(f"    [{self.name}] key {tag} HTTP 429{_limit_kind(r)}, "
+                              f"rotating to next ready key without waiting", flush=True)
+                        self._key_cursor += 1
+                        continue
                     print(f"    [{self.name}] HTTP 429{_limit_kind(r)}, "
                           f"waiting {delay:.0f}s", flush=True)
                 else:
@@ -199,8 +302,14 @@ class OpenAICompatModel:
                           f"{delay:.0f}s (attempt {failures}/6)", flush=True)
                 time.sleep(delay + random.uniform(0, 1))
                 backoff = min(backoff * 2, 60)
+                self._key_cursor += 1
                 continue
             raise RuntimeError(f"{self.name}: HTTP {r.status_code}: {r.text[:300]}")
+
+        active_remaining = [k for k in all_keys
+                            if (self.base_url, self.model, k) not in _exhausted_keys]
+        if not active_remaining:
+            raise ModelUnavailable(self.name, "daily quota used up across all keys")
         raise ModelUnavailable(self.name, "unreachable or rate-limited "
                                           "beyond the retry budget")
 
