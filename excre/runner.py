@@ -47,11 +47,26 @@ def plausible_wrong_answer(item):
     return "none of the above"
 
 
+def run_item(system, k, item, models, simfn, cfg, adversarial=False):
+    # k is the item's position in the dataset, not in whatever list is left
+    # to do, so the saboteur rotation doesn't shift when a run resumes
+    try:
+        rec = _dispatch(system, item, models, simfn, cfg, adversarial, k)
+        rec["correct"] = is_correct(item, rec["answer"])
+        rec["gold"] = item["gold"]
+        rec["dataset"] = item["dataset"]
+        rec["at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    except (KeyboardInterrupt, ModelUnavailable):
+        raise
+    except Exception:
+        rec = {"system": system, "id": item["id"], "error":
+               traceback.format_exc(limit=3)}
+    return rec
+
+
 def run_system(system, items, models, simfn, cfg, out_path,
                adversarial=False, log=print, stop_at=None, after_item=None):
     done = done_ids(out_path)
-    # k is the item's position in the dataset, not in the leftover list, so
-    # the saboteur rotation doesn't shift every time a run resumes
     todo = [(k, it) for k, it in enumerate(items) if it["id"] not in done]
     if not todo:
         return
@@ -65,21 +80,10 @@ def run_system(system, items, models, simfn, cfg, out_path,
         if stop_at and time.time() > stop_at:
             log(f"[{tag}] out of time after {j} items")
             return
-        try:
-            rec = _dispatch(system, item, models, simfn, cfg,
-                            adversarial, k)
-            rec["correct"] = is_correct(item, rec["answer"])
-            rec["gold"] = item["gold"]
-            rec["dataset"] = item["dataset"]
-            rec["at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-        except (KeyboardInterrupt, ModelUnavailable):
-            raise
-        except Exception:
+        rec = run_item(system, k, item, models, simfn, cfg, adversarial)
+        if "error" in rec:
             n_err += 1
-            rec = {"system": system, "id": item["id"], "error":
-                   traceback.format_exc(limit=3)}
-            log(f"[{tag}] error on {item['id']} "
-                f"({n_err} so far)")
+            log(f"[{tag}] error on {item['id']} ({n_err} so far)")
         append_jsonl(out_path, rec)
         if after_item:
             after_item()

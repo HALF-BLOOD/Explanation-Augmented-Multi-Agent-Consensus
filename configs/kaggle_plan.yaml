@@ -1,16 +1,18 @@
-# Stages run strictly in order; inside a stage every job gains `block` items
-# per pass so the systems stay on the same questions. Sized for groq's free
-# 200k tokens/day per model: about 20 core questions a day on easy items,
-# fewer when the agents disagree and run all three rounds.
+# Walked one question at a time: question 1 of every dataset goes through
+# every stage that lists that dataset, then question 2, and so on. A stage
+# drops out once its n questions are done, so the early questions cost the
+# most. Sized for groq's free 200k tokens a day per model: qwen spends about
+# 15k tokens on a core question, about 13 core questions a day, so the whole
+# plan is roughly 40 daily sessions. Wherever it stops, every stage has run
+# on the same leading questions of each of its datasets.
 config: configs/main.yaml
 out: runs/v2
 cache: runs/cache
-block: 10
 
 stages:
   - name: core
-    n: 100
-    datasets: [gsm8k, strategyqa, truthfulqa]
+    n: 60
+    datasets: [gsm8k, strategyqa, truthfulqa, medqa, mmlu]
     systems:
       - cot:gptoss120b
       - cot:qwen27b
@@ -20,42 +22,21 @@ stages:
       - sc:gemini-flash-lite
 
   - name: saboteur
-    n: 50
+    n: 40
     datasets: [gsm8k, truthfulqa]
     systems: [excre_adv, mad_adv]
 
   - name: ablations
-    n: 50
-    datasets: [gsm8k, strategyqa]
+    n: 40
+    datasets: [strategyqa]
     systems: [excre_bare, excre_noda, excre_noanchor]
 
   - name: same-model
-    n: 50
-    datasets: [gsm8k, strategyqa]
+    n: 30
+    datasets: [strategyqa]
     systems: ["excre_same:qwen27b"]
 
-  - name: more-baselines
-    n: 100
-    datasets: [gsm8k, strategyqa, truthfulqa]
-    systems: [judge, reconcile, "sc:gptoss120b", "sc:qwen27b"]
-
-  - name: medqa
-    n: 100
-    datasets: [medqa]
-    systems:
-      - cot:gptoss120b
-      - cot:qwen27b
-      - cot:gemini-flash-lite
-      - excre
-      - mad
-
-  - name: extend
-    n: 300
-    datasets: [gsm8k, strategyqa, truthfulqa, mmlu]
-    systems:
-      - cot:gptoss120b
-      - cot:qwen27b
-      - cot:gemini-flash-lite
-      - excre
-      - mad
-      - sc:gemini-flash-lite
+  - name: baselines
+    n: 30
+    datasets: [strategyqa, truthfulqa, medqa]
+    systems: [judge, reconcile]   # judge reuses the cached cot answers

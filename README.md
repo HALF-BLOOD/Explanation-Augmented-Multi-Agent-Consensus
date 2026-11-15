@@ -68,7 +68,7 @@ tests/          Unit and integration test suites
 Standalone tools:
 
 ```
-kaggle_run.py        Staged, resumable runs that commit their results (see below)
+kaggle_run.py        Resumable question-by-question runs that commit their results
 paper_report.py      All paper tables from a run folder: accuracy, signal AUROCs,
                      selective prediction, saboteur detection, ablations
 rescore.py           Recompute IMRC/trust from stored reasoning trails
@@ -89,10 +89,13 @@ saboteur.
 
 ## Running on Kaggle (incremental)
 
-`kaggle_run.py` works through the stages in `configs/kaggle_plan.yaml` in
-order. Inside a stage every system gains one block of items per pass, so they
-stay on the same questions. A session ends when a provider's free quota or the
-session clock runs out; the next one continues from the last commit.
+`kaggle_run.py` walks `configs/kaggle_plan.yaml` one question at a time:
+question 1 of every dataset goes through every stage that lists that dataset,
+then question 2, and so on, until each stage reaches its `n`. Wherever a run
+stops, every experiment has the same leading questions of each of its
+datasets. A session ends when a provider's free quota or the session clock
+runs out; the next one continues from the last commit. An item that crashes
+twice is left out rather than retried every session.
 
 Everything a run produces is committed and pushed every 30 minutes and at the
 end of the session:
@@ -100,7 +103,7 @@ end of the session:
 ```
 runs/v2/<dataset>/<system>.jsonl     one record per item, with the full trail
 runs/v2/data/                        the sampled benchmark items
-runs/v2/progress.md                  done/total and accuracy per stage
+runs/v2/progress.md                  questions finished per dataset, done/total and accuracy per stage
 runs/v2/sessions.jsonl               one line per session
 runs/v2/manifest.json                models, settings and prompt hash at the start
 runs/cache/                          every model response, keyed by request
@@ -146,7 +149,7 @@ os.environ.update({"GIT_CONFIG_COUNT": "1",
    session stopped.
 
 When a provider says its daily quota is used up, rejects the key, or stays
-unreachable for six minutes, that model is benched, the current block is
+unreachable for six minutes, that model is benched, the current question is
 finished with the models still up, and the session ends. Groq's free quota is
 a daily token allowance per model, so one session a day is all it can feed.
 Don't run two sessions at once:

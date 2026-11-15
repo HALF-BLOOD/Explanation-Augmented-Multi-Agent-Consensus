@@ -1,8 +1,11 @@
 """Work through the run plan a little at a time, one Kaggle session after another.
 
-Stops when a free quota or the session clock runs out. Results, the sampled
-data and the response cache are committed to GitHub with --push, and the next
-session carries on from there.
+The plan is walked one question at a time: question 1 of every dataset goes
+through every experiment that uses it, then question 2, and so on, so the
+results stay balanced across datasets and experiments whenever the run stops.
+A session ends when a free quota or the session clock runs out. Results, the
+sampled data and the response cache are committed to GitHub with --push, and
+the next session carries on from there.
 """
 
 import argparse
@@ -17,11 +20,14 @@ import yaml
 
 from excre import prompts
 from excre.config import load_config, load_dotenv
-from excre.data import load_hf, read_jsonl
+from excre.data import append_jsonl, load_hf, read_jsonl
 from excre.embed import build_sim
 from excre.llm import ModelUnavailable, build_models
-from excre.runner import done_ids, models_needed, run_system
+from excre.runner import models_needed, run_item
 from prepare_data import SEED
+
+# an item that crashes this many times is left out instead of retried forever
+GIVE_UP = 2
 
 
 def load_items(name, n, out):
@@ -65,60 +71,118 @@ def check_frozen(out, cfg):
                    "frozen": now}, f, indent=1)
 
 
-def tally(plan, data):
+def datasets_in(plan):
+    return list(dict.fromkeys(ds for s in plan["stages"] for ds in s["datasets"]))
+
+
+def depth(plan, ds):
+    return max(s["n"] for s in plan["stages"] if ds in s["datasets"])
+
+
+def jobs_at(plan, ds, i):
+    jobs = []
+    for stage in plan["stages"]:
+        if ds in stage["datasets"] and i < stage["n"]:
+            jobs += [j for j in stage["systems"] if j not in jobs]
+    return jobs
+
+
+def entry(book, out, ds, job):
+    # each results file is read once per session and kept up to date in memory
+    path = result_path(out, ds, job)
+    if path not in book:
+        done, errors = {}, {}
+        if os.path.exists(path):
+            for r in read_jsonl(path):
+                if "error" in r:
+                    errors[r["id"]] = errors.get(r["id"], 0) + 1
+                else:
+                    done[r["id"]] = bool(r.get("correct"))
+        book[path] = (done, errors)
+    return (path, *book[path])
+
+
+def settled(book, out, ds, job, item_id):
+    _, done, errors = entry(book, out, ds, job)
+    return item_id in done or errors.get(item_id, 0) >= GIVE_UP
+
+
+def tally(plan, data, book):
+    out = plan["out"]
     counts = {}
-    seen = {}
     for stage in plan["stages"]:
         for ds in stage["datasets"]:
             ids = [it["id"] for it in data[ds][:stage["n"]]]
             for job in stage["systems"]:
-                path = result_path(plan["out"], ds, job)
-                if path not in seen:
-                    seen[path] = {}
-                    if os.path.exists(path):
-                        seen[path] = {r["id"]: bool(r.get("correct"))
-                                      for r in read_jsonl(path) if "error" not in r}
-                got = [seen[path][i] for i in ids if i in seen[path]]
+                _, done, _ = entry(book, out, ds, job)
+                got = [done[i] for i in ids if i in done]
                 counts[stage["name"], ds, job] = (len(got), sum(got), len(ids))
-    return counts, sum(len(v) for v in seen.values())
+    rows = {}
+    for ds in datasets_in(plan):
+        i = 0
+        while i < depth(plan, ds) and all(
+                settled(book, out, ds, job, data[ds][i]["id"])
+                for job in jobs_at(plan, ds, i)):
+            i += 1
+        rows[ds] = i
+    return counts, rows
 
 
-def work(plan, data, models, simfn, cfg, stop_at, benched, tick):
-    block = plan.get("block", 10)
-    for stage in plan["stages"]:
-        finished = {}
-        for upto in range(block, stage["n"] + block, block):
-            for ds in stage["datasets"]:
-                items = data[ds][:min(upto, stage["n"])]
-                for job in stage["systems"]:
-                    if time.time() > stop_at:
-                        return "out of session time"
-                    system = job.removesuffix("_adv")
-                    if models_needed(system, models) & set(benched):
-                        continue
-                    path = result_path(plan["out"], ds, job)
-                    if path not in finished:
-                        finished[path] = done_ids(path)
-                    if all(it["id"] in finished[path] for it in items):
-                        continue
-                    try:
-                        run_system(system, items, models, simfn, cfg, path,
-                                   adversarial=job.endswith("_adv"),
-                                   log=lambda m, ds=ds: print(ds, m, flush=True),
-                                   stop_at=stop_at, after_item=tick)
-                    except ModelUnavailable as e:
-                        print(f"!! {e.model} benched for this session: {e.why}")
-                        benched[e.model] = e.why
-                    finished[path] = done_ids(path)
-            # no running ahead on the models that are still up: that would eat
-            # tomorrow's quota for the jobs that need all three
-            if benched:
-                return f"stage '{stage['name']}' waiting on " + ", ".join(benched)
+def records(book):
+    return sum(len(done) for done, _ in book.values())
+
+
+def work(plan, data, models, simfn, cfg, book, stop_at, benched, tick):
+    out = plan["out"]
+    order = datasets_in(plan)
+    for i in range(max(depth(plan, ds) for ds in order)):
+        for ds in order:
+            if i >= depth(plan, ds):
+                continue
+            item = data[ds][i]
+            for job in jobs_at(plan, ds, i):
+                if time.time() > stop_at:
+                    return "out of session time"
+                system = job.removesuffix("_adv")
+                if models_needed(system, models) & set(benched):
+                    continue
+                if settled(book, out, ds, job, item["id"]):
+                    continue
+                path, done, errors = entry(book, out, ds, job)
+                t0 = time.time()
+                try:
+                    rec = run_item(system, i, item, models, simfn, cfg,
+                                   adversarial=job.endswith("_adv"))
+                except ModelUnavailable as e:
+                    print(f"!! {e.model} benched for this session: {e.why}",
+                          flush=True)
+                    benched[e.model] = e.why
+                    continue
+                append_jsonl(path, rec)
+                if "error" in rec:
+                    errors[item["id"]] = errors.get(item["id"], 0) + 1
+                    what = "error: " + rec["error"].strip().splitlines()[-1][:120]
+                else:
+                    done[item["id"]] = rec["correct"]
+                    what = "right" if rec["correct"] else "wrong"
+                print(f"{item['id']:<16} {job:<24} {what} "
+                      f"({time.time() - t0:.0f}s)", flush=True)
+                tick()
+        # no running ahead on the models that are still up: that would eat
+        # tomorrow's quota for the jobs that need all three
+        if benched:
+            return f"question {i + 1} waiting on " + ", ".join(benched)
     return None
 
 
-def write_progress(plan, counts, note):
-    lines = [f"# {plan['out']}", "", note, "", "done / total (accuracy so far)"]
+def write_progress(plan, data, book, note):
+    counts, rows = tally(plan, data, book)
+    order = datasets_in(plan)
+    lines = [f"# {plan['out']}", "", note, "",
+             "questions finished by every system that runs them",
+             "", "| " + " | ".join(order) + " |", "|---" * len(order) + "|",
+             "| " + " | ".join(f"{rows[ds]}/{depth(plan, ds)}" for ds in order) + " |",
+             "", "done / total (accuracy so far)"]
     for stage in plan["stages"]:
         head = stage["datasets"]
         lines += ["", f"## {stage['name']}", "",
@@ -133,6 +197,7 @@ def write_progress(plan, counts, note):
             lines.append(f"| {job} | " + " | ".join(cells) + " |")
     with open(os.path.join(plan["out"], "progress.md"), "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
+    return rows
 
 
 def write_reports(plan, data):
@@ -195,56 +260,58 @@ def main():
     models = build_models(cfg["models"], cache_dir=cfg["cache_dir"], use_cache=True)
     simfn = build_sim(cfg["imrc"])
 
-    sizes = {}
-    for stage in plan["stages"]:
-        for ds in stage["datasets"]:
-            sizes[ds] = max(sizes.get(ds, 300), stage["n"])
-    data = {ds: load_items(ds, n, out) for ds, n in sizes.items()}
+    data = {ds: load_items(ds, max(300, depth(plan, ds)), out)
+            for ds in datasets_in(plan)}
     tracked = [out, cfg["cache_dir"]]
 
     start = time.time()
     began = datetime.now(timezone.utc)
-    before = tally(plan, data)[1]
+    book = {}
+    rows = tally(plan, data, book)[1]
+    before = records(book)
     benched = {}
     last_push = start
 
     def snapshot(stopped=None):
-        counts, total = tally(plan, data)
-        added = total - before
+        added = records(book) - before
         stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
         note = f"updated {stamp}, +{added} this session"
         if stopped:
             note += f", stopped: {stopped}"
         for m, why in benched.items():
             note += f"  \n{m} benched: {why[:150]}"
-        write_progress(plan, counts, note)
-        return added, stamp
+        return added, stamp, write_progress(plan, data, book, note)
 
     def tick():
         nonlocal last_push
         if args.push and time.time() - last_push > args.push_every * 60:
-            added, stamp = snapshot()
+            added, stamp, _ = snapshot()
             push(tracked, f"checkpoint {stamp} (+{added})")
             last_push = time.time()
 
     print(f"plan {args.plan}: {before} records already done, "
           f"models {', '.join(m.name for m in models)}")
+    print("questions done: " + ", ".join(
+        f"{ds} {n}/{depth(plan, ds)}" for ds, n in rows.items()), flush=True)
     try:
-        stopped = work(plan, data, models, simfn, cfg,
+        stopped = work(plan, data, models, simfn, cfg, book,
                        start + args.hours * 3600, benched, tick)
     except KeyboardInterrupt:
         stopped = "interrupted"
     if stopped is None:
-        left = sum(c[2] - c[0] for c in tally(plan, data)[0].values())
-        stopped = "plan finished" if left == 0 else f"{left} records still failing"
+        rows = tally(plan, data, book)[1]
+        short = [ds for ds, n in rows.items() if n < depth(plan, ds)]
+        stopped = ("plan finished" if not short else
+                   "a few items failed and get one more try next session")
 
-    added, stamp = snapshot(stopped)
+    added, stamp, rows = snapshot(stopped)
     write_reports(plan, data)
     with open(os.path.join(out, "sessions.jsonl"), "a", encoding="utf-8") as f:
         f.write(json.dumps({
             "start": began.isoformat(timespec="seconds"),
             "hours": round((time.time() - start) / 3600, 2),
             "added": added, "stopped": stopped, "benched": benched,
+            "questions": rows,
             "where": os.environ.get("KAGGLE_KERNEL_RUN_TYPE", "local"),
         }) + "\n")
     print(f"\n{stopped}. +{added} records this session, see {out}/progress.md")
