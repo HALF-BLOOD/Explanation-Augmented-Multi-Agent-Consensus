@@ -1,1 +1,2 @@
 {"start": "2026-11-13T08:08:10+00:00", "hours": 0.76, "added": 115, "stopped": "stage 'core' waiting on qwen27b", "benched": {"qwen27b": "daily quota used up"}, "where": "Interactive"}
+{"start": "2026-11-15T06:57:33+00:00", "hours": 1.28, "added": 48, "stopped": "stage 'core' waiting on qwen27b", "benched": {"qwen27b": "daily quota used up (TPD limit 200000)"}, "where": "Batch"}
