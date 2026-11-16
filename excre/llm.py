@@ -231,7 +231,8 @@ class OpenAICompatModel:
 
             if r.status_code == 200:
                 body = r.json()
-                text = body["choices"][0]["message"]["content"] or ""
+                msg = body["choices"][0].get("message") or {}
+                text = msg.get("content") or ""
                 u = body.get("usage") or {}
                 spent = u.get("prompt_tokens", 0)
                 # gemini leaves thinking tokens out of completion_tokens
