@@ -65,6 +65,28 @@ def test_minute_limits_never_bench_a_model(wire, tmp_path):
     assert text == "ok" and len(sent) == 10
 
 
+def test_groq_minute_limit_with_daily_window_headers_is_not_daily(wire, tmp_path):
+    # the 16 nov run benched qwen on this: reset-requests was over 600s
+    sent, queue = wire
+    body = ("Rate limit reached for model `qwen/qwen3.8-27b` in organization "
+            "`org_01jrpdtpd` service tier `on_demand` on output tokens per "
+            "minute (OTPM): Limit 1000, Used 640, Requested 853. Please try "
+            "again in 29.4s.")
+    headers = {"retry-after": "30", "x-ratelimit-reset-requests": "1h26m24s",
+               "x-ratelimit-reset-tokens": "7.5s"}
+    queue.append(Reply(429, body=body, headers=headers))
+    text, _ = model(tmp_path).chat([{"role": "user", "content": "q"}])
+    assert text == "ok" and len(sent) == 2
+
+
+def test_gemini_daily_quota_is_daily(wire, tmp_path):
+    sent, queue = wire
+    queue.append(Reply(429, body='{"quotaId": '
+                       '"GenerateRequestsPerDayPerProjectPerModel-FreeTier"}'))
+    with pytest.raises(ModelUnavailable):
+        model(tmp_path).chat([{"role": "user", "content": "q"}])
+
+
 def test_daily_limit_benches_at_once(wire, tmp_path):
     sent, queue = wire
     queue.append(Reply(429, body="Rate limit reached on tokens per day (TPD): Limit 200000"))

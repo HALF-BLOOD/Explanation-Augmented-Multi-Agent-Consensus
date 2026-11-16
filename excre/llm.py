@@ -73,23 +73,20 @@ def _limit_kind(r):
 
 
 def _daily_limit(r):
-    text = (r.text or "").lower()
-    norm = text.replace(" ", "").replace("_", "").replace("-", "")
-    if any(q in norm for q in ("perday", "dailyquota", "dailylimit", "exceededquota", "quotaexceeded")):
+    # groq names the limit it hit, "(TPD)" or "(OTPM)", and that settles it.
+    # Its x-ratelimit-reset-requests header counts down the daily request
+    # window even on a per-minute 429, so only retry-after is read as a time
+    text = r.text or ""
+    m = re.search(r"\((\w+)\): Limit", text)
+    if m:
+        return m.group(1).upper() in ("TPD", "RPD")
+    # gemini's quota ids read "...PerDay..."
+    if "perday" in text.lower().replace(" ", ""):
         return True
-    if "tpd" in text or "rpd" in text:
-        return True
-    for h in ("retry-after", "x-ratelimit-reset-tokens", "x-ratelimit-reset-requests"):
-        val = r.headers.get(h)
-        if val:
-            try:
-                if float(val) > 600:
-                    return True
-            except ValueError:
-                pass
-            if _seconds(val) > 600:
-                return True
-    return False
+    try:
+        return float(r.headers.get("retry-after", 0)) > 600
+    except ValueError:
+        return False
 
 
 class DiskCache:
