@@ -1,6 +1,6 @@
 # runs/v3
 
-updated 2026-11-16 06:56 UTC, +19 this session, stopped: question 2 waiting on qwen27b  
+updated 2026-11-16 07:30 UTC, +1 this session, stopped: question 2 waiting on qwen27b  
 qwen27b benched: daily quota used up (TPD limit 200000)
 
 questions finished by every system that runs them
@@ -18,7 +18,7 @@ done / total (accuracy so far)
 | cot:gptoss120b | 2/300 (100%) | 2/300 (100%) | 2/300 (100%) | 2/300 (100%) | 2/300 (100%) |
 | cot:qwen27b | 2/300 (100%) | 2/300 (50%) | 2/300 (50%) | 2/300 (100%) | 1/300 (0%) |
 | cot:gemini-flash-lite | 2/300 (100%) | 2/300 (50%) | 2/300 (50%) | 2/300 (100%) | 2/300 (100%) |
-| excre | 2/300 (100%) | 2/300 (0%) | 2/300 (50%) | 1/300 (100%) | 1/300 (100%) |
+| excre | 2/300 (100%) | 2/300 (0%) | 2/300 (50%) | 2/300 (100%) | 1/300 (100%) |
 | mad | 2/300 (100%) | 2/300 (100%) | 2/300 (50%) | 1/300 (100%) | 1/300 (100%) |
 | sc:gemini-flash-lite | 2/300 (100%) | 2/300 (50%) | 2/300 (100%) | 2/300 (100%) | 2/300 (100%) |
 
