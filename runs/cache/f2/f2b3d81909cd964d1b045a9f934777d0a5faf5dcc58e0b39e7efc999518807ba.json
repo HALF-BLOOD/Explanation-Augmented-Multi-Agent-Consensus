@@ -1,0 +1,1 @@
+{"text": "```json\n{\n  \"answer\": \"B\",\n  \"explanation\": \"To determine which type of popcorn produces the greatest number of popped kernels, a controlled experiment testing multiple types of popcorn with repeated trials is the most scientific and accurate method.\",\n  \"confidence\": 1.0\n}\n```", "usage": {"prompt_tokens": 154, "completion_tokens": 64, "finish": "stop"}}

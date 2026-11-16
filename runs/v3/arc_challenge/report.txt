@@ -1,0 +1,30 @@
+
+== accuracy (runs/v3/arc_challenge) ==
+system               n   acc%          95% CI  tok/item
+cot_gemini-flash-lite     2  100.0 [ 34.2,100.0]       438
+cot_gptoss120b       2  100.0 [ 34.2,100.0]       460
+cot_qwen27b          1  100.0 [ 20.7,100.0]       592
+excre                1  100.0 [ 20.7,100.0]     28487
+judge                1  100.0 [ 20.7,100.0]      2323
+mad                  1  100.0 [ 20.7,100.0]     15460
+reconcile            1  100.0 [ 20.7,100.0]      6576
+sc_gemini-flash-lite     2  100.0 [ 34.2,100.0]      2134
+
+== excre vs baselines (exact McNemar, Holm-adjusted) ==
+baseline             n  only-excre  only-base        p    p_adj
+cot_gemini-flash-lite     1           0          0   1.0000   1.0000
+cot_gptoss120b       1           0          0   1.0000   1.0000
+cot_qwen27b          1           0          0   1.0000   1.0000
+judge                1           0          0   1.0000   1.0000
+mad                  1           0          0   1.0000   1.0000
+reconcile            1           0          0   1.0000   1.0000
+sc_gemini-flash-lite     1           0          0   1.0000   1.0000
+
+== gating signal vs correctness ==
+system            spearman    AURC  acc@70%  acc@80%  acc@90%
+
+excre: converged early on 1/1 items, mean rounds 3.00
+  schema compliance (valid after <=1 repair / repair used):
+    gemini-flash-lite 100.0% valid,  0.0% repaired  (4 calls)
+    gptoss120b       100.0% valid,  0.0% repaired  (4 calls)
+    qwen27b          100.0% valid,  0.0% repaired  (4 calls)
