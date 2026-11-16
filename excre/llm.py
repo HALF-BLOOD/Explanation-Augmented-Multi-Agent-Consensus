@@ -73,13 +73,23 @@ def _limit_kind(r):
 
 
 def _daily_limit(r):
-    # gemini names the quota "...PerDay...", groq says "tokens per day (TPD)"
-    if "perday" in r.text.lower().replace(" ", ""):
+    text = (r.text or "").lower()
+    norm = text.replace(" ", "").replace("_", "").replace("-", "")
+    if any(q in norm for q in ("perday", "dailyquota", "dailylimit", "exceededquota", "quotaexceeded")):
         return True
-    try:
-        return float(r.headers.get("retry-after", 0)) > 600
-    except ValueError:
-        return False
+    if "tpd" in text or "rpd" in text:
+        return True
+    for h in ("retry-after", "x-ratelimit-reset-tokens", "x-ratelimit-reset-requests"):
+        val = r.headers.get(h)
+        if val:
+            try:
+                if float(val) > 600:
+                    return True
+            except ValueError:
+                pass
+            if _seconds(val) > 600:
+                return True
+    return False
 
 
 class DiskCache:
@@ -189,10 +199,14 @@ class OpenAICompatModel:
                 ordered_keys.sort(key=key_wait)
 
             api_key = ordered_keys[0]
+            api_key_idx = all_keys.index(api_key) + 1
+            key_tag = f"...{api_key[-4:]}" if len(api_key) > 4 else "key"
             gate_k = (self.base_url, self.model, api_key)
 
             wait = key_wait(api_key)
             if wait > 0:
+                print(f"    [{self.name}] key {api_key_idx}/{len(all_keys)} ({key_tag}) "
+                      f"pacing wait {min(wait, 90):.1f}s", flush=True)
                 time.sleep(min(wait, 90))
 
             t_req = time.monotonic()
@@ -208,8 +222,8 @@ class OpenAICompatModel:
             except (requests.exceptions.Timeout,
                     requests.exceptions.ConnectionError) as e:
                 failures += 1
-                print(f"    [{self.name}] {type(e).__name__}, "
-                      f"attempt {failures}/6", flush=True)
+                print(f"    [{self.name}] key {api_key_idx}/{len(all_keys)} ({key_tag}) "
+                      f"{type(e).__name__}, attempt {failures}/6", flush=True)
                 time.sleep(backoff + random.uniform(0, 1))
                 backoff = min(backoff * 2, 60)
                 self._key_cursor += 1
@@ -247,17 +261,18 @@ class OpenAICompatModel:
                     usage["completion_tokens"] += wasted["completion_tokens"]
                 if self.cache:
                     self.cache.put(key, {"text": text, "usage": usage})
+                print(f"    [{self.name}] key {api_key_idx}/{len(all_keys)} ({key_tag}) ok "
+                      f"(tokens: {usage['prompt_tokens']} in, {usage['completion_tokens']} out)", flush=True)
                 self._key_cursor += 1
                 return text, usage
 
             if r.status_code in (401, 403):
                 _exhausted_keys.add(gate_k)
-                tag = f"...{api_key[-4:]}" if len(api_key) > 4 else "key"
                 active_remaining = [k for k in all_keys
                                     if (self.base_url, self.model, k) not in _exhausted_keys]
+                print(f"    [{self.name}] key {api_key_idx}/{len(all_keys)} ({key_tag}) unauthorized (HTTP {r.status_code}), "
+                      f"removing from pool ({len(active_remaining)} active remaining)...", flush=True)
                 if active_remaining:
-                    print(f"    [{self.name}] key {tag} unauthorized (HTTP {r.status_code}), "
-                          f"switching to next key ({len(active_remaining)} active remaining)...", flush=True)
                     self._key_cursor += 1
                     continue
                 raise ModelUnavailable(self.name, f"HTTP {r.status_code}: {r.text[:200]}")
@@ -267,12 +282,12 @@ class OpenAICompatModel:
 
             if r.status_code == 429 and _daily_limit(r):
                 _exhausted_keys.add(gate_k)
-                tag = f"...{api_key[-4:]}" if len(api_key) > 4 else "key"
                 active_remaining = [k for k in all_keys
                                     if (self.base_url, self.model, k) not in _exhausted_keys]
+                print(f"    [{self.name}] key {api_key_idx}/{len(all_keys)} ({key_tag}) "
+                      f"DAILY QUOTA USED UP{_limit_kind(r)}! "
+                      f"Permanently switching to next key ({len(active_remaining)} active remaining for today)...", flush=True)
                 if active_remaining:
-                    print(f"    [{self.name}] key {tag} daily quota used up{_limit_kind(r)}, "
-                          f"rotating to next key ({len(active_remaining)} active remaining)...", flush=True)
                     self._key_cursor += 1
                     continue
                 raise ModelUnavailable(self.name,
@@ -287,14 +302,14 @@ class OpenAICompatModel:
                 if r.status_code == 429:
                     _hold_until[gate_k] = time.monotonic() + delay
                     _hold_until[gate_m] = time.monotonic() + delay
-                    tag = f"...{api_key[-4:]}" if len(api_key) > 4 else "key"
-                    other_ready = [k for k in active_keys if k != api_key and key_wait(k) == 0]
-                    if other_ready:
-                        print(f"    [{self.name}] key {tag} HTTP 429{_limit_kind(r)}, "
-                              f"rotating to next ready key without waiting", flush=True)
+                    other_keys = [k for k in active_keys if k != api_key]
+                    if other_keys:
+                        print(f"    [{self.name}] key {api_key_idx}/{len(all_keys)} ({key_tag}) "
+                              f"minute limit HTTP 429{_limit_kind(r)}, "
+                              f"immediately rotating to next key without waiting...", flush=True)
                         self._key_cursor += 1
                         continue
-                    print(f"    [{self.name}] HTTP 429{_limit_kind(r)}, "
+                    print(f"    [{self.name}] HTTP 429{_limit_kind(r)}, all keys cooling down, "
                           f"waiting {delay:.0f}s", flush=True)
                 else:
                     failures += 1

@@ -168,3 +168,19 @@ def test_multi_key_failover_on_unauthorized(wire, monkeypatch, tmp_path):
     text, _ = m.chat([{"role": "user", "content": "q1"}])
     assert text == "success from good key"
     assert [h.get("Authorization") for h in sent.headers] == ["Bearer bad_key", "Bearer good_key"]
+
+
+def test_multi_key_immediate_rotate_on_minute_429(wire, monkeypatch, tmp_path):
+    sent, queue = wire
+    monkeypatch.delenv("TEST_KEY", raising=False)
+    monkeypatch.setenv("TEST_KEY", "k1, k2")
+
+    # Key 1 hits minute TPM limit (not daily)
+    queue.append(Reply(429, body="Rate limit reached on tokens per minute (TPM): Limit 8000, Requested 9000"))
+    queue.append(Reply(200, text="success from k2"))
+
+    m = model(tmp_path)
+    text, _ = m.chat([{"role": "user", "content": "q1"}])
+    assert text == "success from k2"
+    # Verify k2 was used immediately without giving up
+    assert [h.get("Authorization") for h in sent.headers] == ["Bearer k1", "Bearer k2"]

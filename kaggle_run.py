@@ -22,7 +22,7 @@ from excre import prompts
 from excre.config import load_config, load_dotenv
 from excre.data import append_jsonl, load_hf, read_jsonl
 from excre.embed import build_sim
-from excre.llm import ModelUnavailable, build_models
+from excre.llm import ModelUnavailable, build_models, resolve_api_keys
 from excre.runner import models_needed, run_item
 from prepare_data import SEED
 
@@ -32,25 +32,34 @@ GIVE_UP = 2
 
 def load_items(name, n, out):
     # drawn from hugging face once per run folder and kept there, so every
-    # session asks the same questions and the paper can list exactly which
+    # session asks the same questions and the paper can list exactly which.
+    # Asking for more than the folder holds redraws at the recorded revision,
+    # which keeps the questions already there and adds new ones after them
     folder = os.path.join(out, "data")
     path = os.path.join(folder, name + ".jsonl")
-    if not os.path.exists(path):
-        print(f"drawing {n} {name} questions from hugging face ...")
-        items, source = load_hf(name, {}, n, SEED)
-        os.makedirs(folder, exist_ok=True)
-        with open(path, "w", encoding="utf-8") as f:
-            for it in items:
-                f.write(json.dumps(it, ensure_ascii=False) + "\n")
-        record = os.path.join(folder, "sources.json")
-        sources = {}
-        if os.path.exists(record):
-            with open(record, encoding="utf-8") as f:
-                sources = json.load(f)
-        sources[name] = source
-        with open(record, "w", encoding="utf-8") as f:
-            json.dump(sources, f, indent=1)
-    return read_jsonl(path)
+    record = os.path.join(folder, "sources.json")
+    have = read_jsonl(path) if os.path.exists(path) else []
+    if len(have) >= n:
+        return have
+    sources = {}
+    if os.path.exists(record):
+        with open(record, encoding="utf-8") as f:
+            sources = json.load(f)
+    print(f"drawing {n} {name} questions from hugging face ...")
+    items, source = load_hf(name, {}, n, SEED,
+                            revision=sources.get(name, {}).get("revision"))
+    same = lambda it: (it["question"], it["choices"], it["gold"])
+    if [same(it) for it in items[:len(have)]] != [same(it) for it in have]:
+        sys.exit(f"{path}: a bigger draw does not start with the questions "
+                 f"already in the run, so it was not saved")
+    os.makedirs(folder, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        for it in items:
+            f.write(json.dumps(it, ensure_ascii=False) + "\n")
+    sources[name] = source
+    with open(record, "w", encoding="utf-8") as f:
+        json.dump(sources, f, indent=1)
+    return items
 
 
 def result_path(out, dataset, job):
@@ -301,8 +310,14 @@ def main():
             push(tracked, f"checkpoint {stamp} (+{added})")
             last_push = time.time()
 
+    def m_label(m):
+        if hasattr(m, "api_key_env"):
+            nk = len(resolve_api_keys(m.api_key_env))
+            return f"{m.name} ({nk} key{'s' if nk != 1 else ''})"
+        return m.name
+
     print(f"plan {args.plan}: {before} records already done, "
-          f"models {', '.join(m.name for m in models)}")
+          f"models: {', '.join(m_label(m) for m in models)}")
     print("questions done: " + ", ".join(
         f"{ds} {n}/{depth(plan, ds)}" for ds, n in rows.items()), flush=True)
     try:

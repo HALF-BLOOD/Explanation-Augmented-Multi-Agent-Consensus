@@ -98,3 +98,34 @@ def test_real_systems_write_one_file_per_dataset_and_system(tmp_path):
     counts, rows = kr.tally(plan, data, {})
     assert rows == {"a": 2, "b": 2}
     assert counts["core", "a", "excre"][0] == 2
+
+
+def test_sample_grows_without_touching_the_questions_already_drawn(tmp_path,
+                                                                   monkeypatch):
+    import random
+    pool = [{"dataset": "a", "format": "numeric", "question": f"q{i}",
+             "choices": None, "gold": str(i), "meta": {}} for i in range(50)]
+    seen = []
+
+    def fake_hf(name, cfg, n, seed, revision=None):
+        seen.append(revision)
+        items = [dict(it) for it in pool]
+        random.Random(seed).shuffle(items)
+        for i, it in enumerate(items[:n]):
+            it["id"] = f"a-{i:04d}"
+        return items[:n], {"revision": revision or "abc", "drawn": n}
+
+    monkeypatch.setattr(kr, "load_hf", fake_hf)
+    first = kr.load_items("a", 5, str(tmp_path))
+    assert kr.load_items("a", 5, str(tmp_path)) == first
+    more = kr.load_items("a", 12, str(tmp_path))
+    assert more[:5] == first and len(more) == 12
+    assert seen == [None, "abc"]
+
+    pool.reverse()
+    try:
+        kr.load_items("a", 20, str(tmp_path))
+        raise AssertionError("a changed draw should not be saved")
+    except SystemExit:
+        pass
+    assert kr.load_items("a", 12, str(tmp_path)) == more

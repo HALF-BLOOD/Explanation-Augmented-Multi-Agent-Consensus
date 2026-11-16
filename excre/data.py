@@ -112,11 +112,12 @@ SOURCES = {
 }
 
 
-def load_hf(name, subset_cfg, n, seed):
+def load_hf(name, subset_cfg, n, seed, revision=None):
     """Shuffle the whole split with `seed` and keep the first n items.
 
     Returns the items and where they came from, including the dataset
-    revision, so the exact draw can be repeated later.
+    revision, so the exact draw can be repeated or extended later: the same
+    seed and revision with a bigger n gives the same first items.
     """
     from datasets import load_dataset
     from huggingface_hub import HfApi
@@ -124,7 +125,7 @@ def load_hf(name, subset_cfg, n, seed):
     repo, config, split = SOURCES[name]
     # split=train on gsm8k gives a dev slice disjoint from the test items
     split = subset_cfg.get("split", split)
-    revision = HfApi().dataset_info(repo).sha
+    revision = revision or HfApi().dataset_info(repo).sha
     rows = load_dataset(repo, config, split=split, revision=revision)
     items = _LOADERS[name](rows)
     random.Random(seed).shuffle(items)

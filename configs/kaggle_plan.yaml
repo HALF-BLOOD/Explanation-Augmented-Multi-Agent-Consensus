@@ -1,17 +1,17 @@
 # Walked one question at a time: question 1 of every dataset goes through
 # every stage that lists that dataset, then question 2, and so on. A stage
 # drops out once its n questions are done, so the early questions cost the
-# most. Sized for groq's free 200k tokens a day per model: qwen spends about
-# 15k tokens on a core question, about 13 core questions a day, so the whole
-# plan is roughly 40 daily sessions. Wherever it stops, every stage has run
-# on the same leading questions of each of its datasets.
+# most and the side stages are complete long before core is. Core runs to
+# the 300 questions drawn per dataset; stop whenever time is up, every stage
+# has run on the same leading questions of each of its datasets. To go past
+# 300 later, raise n: the sample is extended at the same dataset revision.
 config: configs/main.yaml
 out: runs/v3
 cache: runs/cache
 
 stages:
   - name: core
-    n: 60
+    n: 300
     datasets: [gsm8k, strategyqa, truthfulqa, arc_challenge, mmlu]
     systems:
       - cot:gptoss120b

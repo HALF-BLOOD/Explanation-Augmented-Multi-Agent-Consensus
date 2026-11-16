@@ -95,14 +95,16 @@ then question 2, and so on, until each stage reaches its `n`. Wherever a run
 stops, every experiment has the same leading questions of each of its
 datasets. A session ends when a provider's free quota or the session clock
 runs out; the next one continues from the last commit. An item that crashes
-twice is left out rather than retried every session.
+twice is left out rather than retried every session. Raising a stage's
+`n` past the questions drawn extends the sample at the recorded dataset
+revision, keeping every question already in the run.
 
 Everything a run produces is committed and pushed every 30 minutes and at the
 end of the session:
 
 ```
 runs/v3/<dataset>/<system>.jsonl     one record per item, with the full trail
-runs/v3/data/                        the sampled benchmark items
+runs/v3/data/                        the sampled benchmark items; sources.json has repo, split and revision
 runs/v3/progress.md                  questions finished per dataset, done/total and accuracy per stage
 runs/v3/sessions.jsonl               one line per session
 runs/v3/manifest.json                models, settings and prompt hash at the start
