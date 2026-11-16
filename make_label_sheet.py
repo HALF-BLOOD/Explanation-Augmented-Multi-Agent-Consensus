@@ -7,7 +7,7 @@ reasoning, 4 = same reasoning in different words). The IMRC scores are NOT
 shown on the sheet, so the labelling stays blind; they are stored in a
 separate key file for the correlation check afterwards.
 
-    python make_label_sheet.py --results runs/v2/gsm8k/excre.jsonl \
+    python make_label_sheet.py --results runs/v3/gsm8k/excre.jsonl \
         --n 60 --out labels/main
 """
 

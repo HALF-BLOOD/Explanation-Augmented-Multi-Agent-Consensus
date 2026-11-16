@@ -31,13 +31,25 @@ GIVE_UP = 2
 
 
 def load_items(name, n, out):
-    path = os.path.join(out, "data", name + ".jsonl")
+    # drawn from hugging face once per run folder and kept there, so every
+    # session asks the same questions and the paper can list exactly which
+    folder = os.path.join(out, "data")
+    path = os.path.join(folder, name + ".jsonl")
     if not os.path.exists(path):
-        print(f"preparing {name} ...")
-        os.makedirs(os.path.dirname(path), exist_ok=True)
+        print(f"drawing {n} {name} questions from hugging face ...")
+        items, source = load_hf(name, {}, n, SEED)
+        os.makedirs(folder, exist_ok=True)
         with open(path, "w", encoding="utf-8") as f:
-            for it in load_hf(name, {}, n, SEED):
+            for it in items:
                 f.write(json.dumps(it, ensure_ascii=False) + "\n")
+        record = os.path.join(folder, "sources.json")
+        sources = {}
+        if os.path.exists(record):
+            with open(record, encoding="utf-8") as f:
+                sources = json.load(f)
+        sources[name] = source
+        with open(record, "w", encoding="utf-8") as f:
+            json.dump(sources, f, indent=1)
     return read_jsonl(path)
 
 

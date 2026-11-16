@@ -33,7 +33,7 @@ python analyze_results.py --results results/dev
    ```
 4. Prepare evaluation datasets:
    ```bash
-   python prepare_data.py --datasets gsm8k,mmlu,strategyqa,truthfulqa --n 300
+   python prepare_data.py --datasets gsm8k,strategyqa,truthfulqa,arc_challenge,mmlu --n 300
    ```
 5. Run multi-agent and baseline evaluation:
    ```bash
@@ -101,17 +101,17 @@ Everything a run produces is committed and pushed every 30 minutes and at the
 end of the session:
 
 ```
-runs/v2/<dataset>/<system>.jsonl     one record per item, with the full trail
-runs/v2/data/                        the sampled benchmark items
-runs/v2/progress.md                  questions finished per dataset, done/total and accuracy per stage
-runs/v2/sessions.jsonl               one line per session
-runs/v2/manifest.json                models, settings and prompt hash at the start
+runs/v3/<dataset>/<system>.jsonl     one record per item, with the full trail
+runs/v3/data/                        the sampled benchmark items
+runs/v3/progress.md                  questions finished per dataset, done/total and accuracy per stage
+runs/v3/sessions.jsonl               one line per session
+runs/v3/manifest.json                models, settings and prompt hash at the start
 runs/cache/                          every model response, keyed by request
 ```
 
 A run folder is tied to its manifest: if the models, settings or prompts
 change later, `kaggle_run.py` stops rather than mix two setups in one folder.
-The tables for the paper come from `python paper_report.py --run runs/v2`.
+The tables for the paper come from `python paper_report.py --run runs/v3`.
 
 One-time setup:
 

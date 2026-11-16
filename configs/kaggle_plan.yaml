@@ -6,13 +6,13 @@
 # plan is roughly 40 daily sessions. Wherever it stops, every stage has run
 # on the same leading questions of each of its datasets.
 config: configs/main.yaml
-out: runs/v2
+out: runs/v3
 cache: runs/cache
 
 stages:
   - name: core
     n: 60
-    datasets: [gsm8k, strategyqa, truthfulqa, medqa, mmlu]
+    datasets: [gsm8k, strategyqa, truthfulqa, arc_challenge, mmlu]
     systems:
       - cot:gptoss120b
       - cot:qwen27b
@@ -38,5 +38,5 @@ stages:
 
   - name: baselines
     n: 30
-    datasets: [strategyqa, truthfulqa, medqa]
+    datasets: [strategyqa, truthfulqa, arc_challenge]
     systems: [judge, reconcile]   # judge reuses the cached cot answers

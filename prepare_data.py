@@ -29,7 +29,9 @@ def main():
             print(f"skipping unknown dataset: {name}")
             continue
         print(f"fetching {name} ...")
-        items = load_hf(name, cfg, args.n, SEED)
+        items, source = load_hf(name, cfg, args.n, SEED)
+        print(f"  {source['repo']} {source['split']} @ {source['revision'][:10]}, "
+              f"{source['rows']} rows")
         if args.suffix:
             # keep ids distinct from the main file so results can never be
             # paired across the wrong slices

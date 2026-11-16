@@ -1,0 +1,47 @@
+{
+ "gsm8k": {
+  "repo": "openai/gsm8k",
+  "config": "main",
+  "split": "test",
+  "revision": "740312add88f781978c0658806c59bc2815b9866",
+  "rows": 1319,
+  "drawn": 300,
+  "seed": 20049123
+ },
+ "strategyqa": {
+  "repo": "ChilleD/StrategyQA",
+  "config": null,
+  "split": "test",
+  "revision": "705562638fe1d8ca6bb98c66fc8f94d45fda8c83",
+  "rows": 687,
+  "drawn": 300,
+  "seed": 20049123
+ },
+ "truthfulqa": {
+  "repo": "domenicrosati/TruthfulQA",
+  "config": null,
+  "split": "train",
+  "revision": "6a037f8d9403bbf12fb4cf6d0e91956df6a64e50",
+  "rows": 817,
+  "drawn": 300,
+  "seed": 20049123
+ },
+ "arc_challenge": {
+  "repo": "allenai/ai2_arc",
+  "config": "ARC-Challenge",
+  "split": "test",
+  "revision": "210d026faf9955653af8916fad021475a3f00453",
+  "rows": 1172,
+  "drawn": 300,
+  "seed": 20049123
+ },
+ "mmlu": {
+  "repo": "cais/mmlu",
+  "config": "all",
+  "split": "test",
+  "revision": "c30699e8356da336a370243923dbaf21066bb9fe",
+  "rows": 14042,
+  "drawn": 300,
+  "seed": 20049123
+ }
+}

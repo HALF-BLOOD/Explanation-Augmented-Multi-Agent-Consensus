@@ -2,6 +2,7 @@
 
 import json
 import os
+import random
 import re
 from fractions import Fraction
 
@@ -42,11 +43,12 @@ def normalise_numeric(text):
 
 
 def normalise_letter(text):
+    # truthfulqa questions have up to 13 options, so letters run past J
     text = str(text).strip()
-    m = re.match(r"^\(?([A-Ja-j])\)?[.:)\s]", text + " ")
+    m = re.match(r"^\(?([A-Za-z])\)?[.:)\s]", text + " ")
     if m:
         return m.group(1).upper()
-    m = re.search(r"\(([A-Ja-j])\)", text)
+    m = re.search(r"\(([A-Za-z])\)", text)
     if m:
         return m.group(1).upper()
     return text[:1].upper() if text[:1].isalpha() and len(text) <= 2 else text.lower()
@@ -95,102 +97,104 @@ def extract_final_answer(text):
     nums = re.findall(r"-?\d[\d,]*(?:\.\d+)?", tail)
     if nums:
         return nums[-1]
-    letters = re.findall(r"\(([A-J])\)", tail)
+    letters = re.findall(r"\(([A-Z])\)", tail)
     return letters[-1] if letters else tail.strip()[-40:]
 
 
-# Benchmark dataset loaders
+# Benchmark loaders: (repo, config, split) of the official Hugging Face release
+
+SOURCES = {
+    "gsm8k": ("openai/gsm8k", "main", "test"),
+    "strategyqa": ("ChilleD/StrategyQA", None, "test"),
+    "truthfulqa": ("domenicrosati/TruthfulQA", None, "train"),
+    "arc_challenge": ("allenai/ai2_arc", "ARC-Challenge", "test"),
+    "mmlu": ("cais/mmlu", "all", "test"),
+}
+
 
 def load_hf(name, subset_cfg, n, seed):
-    import random
-    from datasets import load_dataset
+    """Shuffle the whole split with `seed` and keep the first n items.
 
-    rng = random.Random(seed)
-    make = _LOADERS[name]
-    items = make(load_dataset, subset_cfg)
-    rng.shuffle(items)
+    Returns the items and where they came from, including the dataset
+    revision, so the exact draw can be repeated later.
+    """
+    from datasets import load_dataset
+    from huggingface_hub import HfApi
+
+    repo, config, split = SOURCES[name]
+    # split=train on gsm8k gives a dev slice disjoint from the test items
+    split = subset_cfg.get("split", split)
+    revision = HfApi().dataset_info(repo).sha
+    rows = load_dataset(repo, config, split=split, revision=revision)
+    items = _LOADERS[name](rows)
+    random.Random(seed).shuffle(items)
     picked = items[:n]
     for i, it in enumerate(picked):
         it["id"] = f"{name}-{i:04d}"
-    return picked
+    source = {"repo": repo, "config": config, "split": split,
+              "revision": revision, "rows": len(items), "drawn": len(picked),
+              "seed": seed}
+    return picked, source
 
 
-def _gsm8k(load_dataset, cfg):
-    # split=train gives a disjoint dev slice for prompt/threshold tuning,
-    # so nothing is ever tuned on the test items
-    ds = load_dataset("openai/gsm8k", "main",
-                      split=cfg.get("split", "test"))
-    out = []
-    for row in ds:
-        gold = row["answer"].split("####")[-1].strip()
-        out.append({"dataset": "gsm8k", "format": "numeric",
-                    "question": row["question"], "choices": None,
-                    "gold": gold, "meta": {}})
-    return out
+def _gsm8k(rows):
+    return [{"dataset": "gsm8k", "format": "numeric",
+             "question": r["question"], "choices": None,
+             "gold": r["answer"].split("####")[-1].strip(), "meta": {}}
+            for r in rows]
 
 
-def _mmlu(load_dataset, cfg):
-    subjects = cfg.get("mmlu_subjects", [
-        "high_school_mathematics", "philosophy",
-        "clinical_knowledge", "global_facts"])
-    out = []
-    for sub in subjects:
-        ds = load_dataset("cais/mmlu", sub, split="test")
-        for row in ds:
-            out.append({"dataset": "mmlu", "format": "letter",
-                        "question": row["question"],
-                        "choices": list(row["choices"]),
-                        "gold": chr(65 + int(row["answer"])),
-                        "meta": {"subject": sub}})
-    return out
-
-
-def _strategyqa(load_dataset, cfg):
-    ds = load_dataset("ChilleD/StrategyQA", split="test")
+def _strategyqa(rows):
     return [{"dataset": "strategyqa", "format": "yesno",
-             "question": row["question"], "choices": None,
-             "gold": "yes" if row["answer"] else "no", "meta": {}}
-            for row in ds]
+             "question": r["question"], "choices": None,
+             "gold": "yes" if r["answer"] else "no",
+             "meta": {"qid": r["qid"]}}
+            for r in rows]
 
 
-def _truthfulqa(load_dataset, cfg):
-    import random
-    ds = load_dataset("truthfulqa/truthful_qa", "multiple_choice",
-                      split="validation")
+def _truthfulqa(rows):
+    # the csv release has one best answer and a list of incorrect ones, the
+    # same material the mc1 task is built from; options are shuffled so the
+    # right one isn't always (A)
     rng = random.Random(20049123)
     out = []
-    for row in ds:
-        choices = list(row["mc1_targets"]["choices"])
-        labels = list(row["mc1_targets"]["labels"])
+    for r in rows:
+        wrong = [a.strip() for a in r["Incorrect Answers"].split(";") if a.strip()]
+        choices = [r["Best Answer"].strip()] + wrong
         order = list(range(len(choices)))
         rng.shuffle(order)
-        shuffled = [choices[i] for i in order]
-        gold_idx = order.index(labels.index(1))
         out.append({"dataset": "truthfulqa", "format": "letter",
-                    "question": row["question"], "choices": shuffled,
-                    "gold": chr(65 + gold_idx), "meta": {}})
+                    "question": r["Question"],
+                    "choices": [choices[i] for i in order],
+                    "gold": chr(65 + order.index(0)),
+                    "meta": {"type": r["Type"], "category": r["Category"]}})
     return out
 
 
-def _medqa(load_dataset, cfg):
-    ds = load_dataset("GBaker/MedQA-USMLE-4-options", split="test")
-    out = []
-    for row in ds:
-        opts = row["options"]
-        keys = sorted(opts.keys())
-        out.append({"dataset": "medqa", "format": "letter",
-                    "question": row["question"],
-                    "choices": [opts[k] for k in keys],
-                    "gold": row["answer_idx"], "meta": {}})
-    return out
+def _arc_challenge(rows):
+    # a few questions are labelled 1-4 instead of A-D; letters go by position
+    return [{"dataset": "arc_challenge", "format": "letter",
+             "question": r["question"],
+             "choices": list(r["choices"]["text"]),
+             "gold": chr(65 + list(r["choices"]["label"]).index(r["answerKey"])),
+             "meta": {"id": r["id"]}}
+            for r in rows]
+
+
+def _mmlu(rows):
+    return [{"dataset": "mmlu", "format": "letter",
+             "question": r["question"], "choices": list(r["choices"]),
+             "gold": chr(65 + int(r["answer"])),
+             "meta": {"subject": r["subject"]}}
+            for r in rows]
 
 
 _LOADERS = {
     "gsm8k": _gsm8k,
-    "mmlu": _mmlu,
     "strategyqa": _strategyqa,
     "truthfulqa": _truthfulqa,
-    "medqa": _medqa,
+    "arc_challenge": _arc_challenge,
+    "mmlu": _mmlu,
 }
 
 AVAILABLE_DATASETS = sorted(_LOADERS)
