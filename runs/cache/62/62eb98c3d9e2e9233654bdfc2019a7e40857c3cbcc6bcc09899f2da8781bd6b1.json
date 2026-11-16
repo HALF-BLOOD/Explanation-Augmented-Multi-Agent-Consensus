@@ -1,0 +1,1 @@
+{"text": "```json\n{\n  \"answer\": \"C\",\n  \"explanation\": \"Flying a kite relies on wind, which is a naturally replenished, renewable energy source. The other options (gas, heating oil, and charcoal) all rely on fossil fuels, which are non-renewable.\",\n  \"confidence\": 1.0\n}\n```", "usage": {"prompt_tokens": 396, "completion_tokens": 72, "finish": "stop"}}
