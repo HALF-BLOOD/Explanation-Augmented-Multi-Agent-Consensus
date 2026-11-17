@@ -1,0 +1,1 @@
+{"text": "{\n  \"answer\": \"A\",\n  \"explanation\": \"Scientific acceptance of a hypothesis depends on reproducibility; when independent researchers can duplicate the experimental results, the hypothesis gains credibility and is more likely to be accepted.\",\n  \"confidence\": 0.99\n}", "usage": {"prompt_tokens": 176, "completion_tokens": 155, "finish": "stop"}}
