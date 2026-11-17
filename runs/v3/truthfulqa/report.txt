@@ -1,45 +1,55 @@
 
 == accuracy (runs/v3/truthfulqa) ==
 system               n   acc%          95% CI  tok/item
-cot_gemini-flash-lite     6   83.3 [ 43.6, 97.0]       375
-cot_gptoss120b       6   83.3 [ 43.6, 97.0]       512
-cot_qwen27b          6   66.7 [ 30.0, 90.3]       620
-excre                6   66.7 [ 30.0, 90.3]     24049
-excre_adv            6   66.7 [ 30.0, 90.3]     17768
-judge                6   83.3 [ 43.6, 97.0]      3100
-mad                  6   83.3 [ 43.6, 97.0]     15982
-mad_adv              6   66.7 [ 30.0, 90.3]     20107
-reconcile            5   80.0 [ 37.6, 96.4]      6987
-sc_gemini-flash-lite     6   83.3 [ 43.6, 97.0]      1783
+cot_gemini-flash-lite    11   63.6 [ 35.4, 84.8]       390
+cot_gptoss120b      11   81.8 [ 52.3, 94.9]       516
+cot_qwen27b         11   72.7 [ 43.4, 90.3]       769
+excre               10   60.0 [ 31.3, 83.2]     24552
+excre_adv           10   70.0 [ 39.7, 89.2]     18481
+judge               10   80.0 [ 49.0, 94.3]      3254
+mad                 10   90.0 [ 59.6, 98.2]     16684
+mad_adv             10   70.0 [ 39.7, 89.2]     20499
+reconcile           10   80.0 [ 49.0, 94.3]      6936
+sc_gemini-flash-lite    11   63.6 [ 35.4, 84.8]      2139
 
 == excre vs baselines (exact McNemar, Holm-adjusted) ==
 baseline             n  only-excre  only-base        p    p_adj
-cot_gemini-flash-lite     6           1          2   1.0000   1.0000
-cot_gptoss120b       6           0          1   1.0000   1.0000
-cot_qwen27b          6           0          0   1.0000   1.0000
-judge                6           0          1   1.0000   1.0000
-mad                  6           0          1   1.0000   1.0000
-mad_adv              6           0          0   1.0000   1.0000
-reconcile            5           0          1   1.0000   1.0000
-sc_gemini-flash-lite     6           0          1   1.0000   1.0000
+cot_gemini-flash-lite    10           1          2   1.0000   1.0000
+cot_gptoss120b      10           1          3   0.6250   1.0000
+cot_qwen27b         10           0          1   1.0000   1.0000
+judge               10           0          2   0.5000   1.0000
+mad                 10           0          3   0.2500   1.0000
+mad_adv             10           1          2   1.0000   1.0000
+reconcile           10           0          2   0.5000   1.0000
+sc_gemini-flash-lite    10           0          1   1.0000   1.0000
 
 == gating signal vs correctness ==
 system            spearman    AURC  acc@70%  acc@80%  acc@90%
+cot_gemini-flash-lite     0.000   0.283     71.4     62.5     66.7
+cot_gptoss120b       0.000   0.135     85.7     87.5     77.8
+cot_qwen27b          0.000   0.421     71.4     62.5     66.7
+excre                0.355   0.218     57.1     62.5     55.6
+excre_adv            0.570   0.103     85.7     75.0     66.7
+judge                0.000   0.327     85.7     75.0     77.8
+mad                 -0.111   0.293     85.7     87.5     88.9
+mad_adv             -0.488   0.570     57.1     62.5     66.7
+reconcile            0.667   0.075     85.7     87.5     88.9
+sc_gemini-flash-lite     0.607   0.138     85.7     87.5     77.8
 
-== adversarial insider (6 paired items) ==
-  clean      acc  66.7  trust 0.744  coalition-IMRC 0.633  fragility 0.336
-  sabotaged  acc  66.7  trust 0.553  coalition-IMRC 0.281  fragility 0.257
-  fragility AUROC (sabotaged vs clean): 0.389
-  consensus flipped to wrong on 1/6 items
+== adversarial insider (10 paired items) ==
+  clean      acc  60.0  trust 0.718  coalition-IMRC 0.602  fragility 0.357
+  sabotaged  acc  70.0  trust 0.523  coalition-IMRC 0.238  fragility 0.241
+  fragility AUROC (sabotaged vs clean): 0.330
+  consensus flipped to wrong on 1/10 items
 
-excre: converged early on 1/6 items, mean rounds 2.67
+excre: converged early on 1/10 items, mean rounds 2.80
   schema compliance (valid after <=1 repair / repair used):
-    gemini-flash-lite 100.0% valid,  9.1% repaired  (22 calls)
-    gptoss120b       100.0% valid,  4.5% repaired  (22 calls)
-    qwen27b          100.0% valid,  4.5% repaired  (22 calls)
+    gemini-flash-lite 100.0% valid,  5.3% repaired  (38 calls)
+    gptoss120b       100.0% valid,  2.6% repaired  (38 calls)
+    qwen27b          100.0% valid,  2.6% repaired  (38 calls)
 
-excre_adv: converged early on 4/6 items, mean rounds 1.83
+excre_adv: converged early on 6/10 items, mean rounds 2.00
   schema compliance (valid after <=1 repair / repair used):
-    gemini-flash-lite 100.0% valid,  5.9% repaired  (17 calls)
-    gptoss120b       100.0% valid,  0.0% repaired  (17 calls)
-    qwen27b          100.0% valid,  5.9% repaired  (17 calls)
+    gemini-flash-lite 100.0% valid,  3.3% repaired  (30 calls)
+    gptoss120b       100.0% valid,  0.0% repaired  (30 calls)
+    qwen27b          100.0% valid,  3.3% repaired  (30 calls)
