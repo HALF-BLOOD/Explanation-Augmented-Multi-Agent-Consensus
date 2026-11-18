@@ -1,0 +1,1 @@
+{"text": "{\n  \"answer\": \"C\",\n  \"explanation\": \"An open switch interrupts the conductive path, preventing charge flow. A wire, battery, or bulb all allow current to flow, whereas a switch can stop it when opened.\",\n  \"confidence\": 0.99\n}", "usage": {"prompt_tokens": 153, "completion_tokens": 152, "finish": "stop"}}
