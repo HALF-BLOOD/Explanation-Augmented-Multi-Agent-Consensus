@@ -1,32 +1,32 @@
 
 == accuracy (runs/v3/mmlu) ==
 system               n   acc%          95% CI  tok/item
-cot_gemini-flash-lite    11   81.8 [ 52.3, 94.9]       396
-cot_gptoss120b      11   90.9 [ 62.3, 98.4]       452
-cot_qwen27b         10   90.0 [ 59.6, 98.2]       656
-excre               10  100.0 [ 72.2,100.0]     20405
-mad                 10   90.0 [ 59.6, 98.2]     13990
-sc_gemini-flash-lite    11   90.9 [ 62.3, 98.4]      1954
+cot_gemini-flash-lite    15   86.7 [ 62.1, 96.3]       408
+cot_gptoss120b      15   93.3 [ 70.2, 98.8]       516
+cot_qwen27b         15   93.3 [ 70.2, 98.8]       709
+excre               15  100.0 [ 79.6,100.0]     22490
+mad                 14   92.9 [ 68.5, 98.7]     15062
+sc_gemini-flash-lite    15   93.3 [ 70.2, 98.8]      2059
 
 == excre vs baselines (exact McNemar, Holm-adjusted) ==
 baseline             n  only-excre  only-base        p    p_adj
-cot_gemini-flash-lite    10           2          0   0.5000   1.0000
-cot_gptoss120b      10           1          0   1.0000   1.0000
-cot_qwen27b         10           1          0   1.0000   1.0000
-mad                 10           1          0   1.0000   1.0000
-sc_gemini-flash-lite    10           1          0   1.0000   1.0000
+cot_gemini-flash-lite    15           2          0   0.5000   1.0000
+cot_gptoss120b      15           1          0   1.0000   1.0000
+cot_qwen27b         15           1          0   1.0000   1.0000
+mad                 14           1          0   1.0000   1.0000
+sc_gemini-flash-lite    15           1          0   1.0000   1.0000
 
 == gating signal vs correctness ==
 system            spearman    AURC  acc@70%  acc@80%  acc@90%
-cot_gemini-flash-lite     0.000   0.084     85.7     87.5     88.9
-cot_gptoss120b       0.000   0.085     85.7     87.5     88.9
-cot_qwen27b          0.000   0.293     85.7     87.5     88.9
+cot_gemini-flash-lite     0.000   0.102     80.0     83.3     84.6
+cot_gptoss120b       0.000   0.082     90.0     91.7     92.3
+cot_qwen27b          0.000   0.221     90.0     91.7     92.3
 excre                0.000   0.000    100.0    100.0    100.0
-mad                  0.000   0.065     85.7     87.5     88.9
-sc_gemini-flash-lite    -0.100   0.067     85.7     87.5     88.9
+mad                  0.000   0.069     88.9     90.9     91.7
+sc_gemini-flash-lite    -0.071   0.069     90.0     91.7     92.3
 
-excre: converged early on 9/10 items, mean rounds 2.30
+excre: converged early on 11/15 items, mean rounds 2.40
   schema compliance (valid after <=1 repair / repair used):
-    gemini-flash-lite 100.0% valid,  3.0% repaired  (33 calls)
-    gptoss120b       100.0% valid,  3.0% repaired  (33 calls)
-    qwen27b          100.0% valid,  0.0% repaired  (33 calls)
+    gemini-flash-lite 100.0% valid,  3.9% repaired  (51 calls)
+    gptoss120b       100.0% valid,  2.0% repaired  (51 calls)
+    qwen27b          100.0% valid,  2.0% repaired  (51 calls)

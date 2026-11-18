@@ -1,38 +1,38 @@
 
 == accuracy (runs/v3/arc_challenge) ==
 system               n   acc%          95% CI  tok/item
-cot_gemini-flash-lite    11  100.0 [ 74.1,100.0]       370
-cot_gptoss120b      11  100.0 [ 74.1,100.0]       499
-cot_qwen27b         10   90.0 [ 59.6, 98.2]       749
-excre               10  100.0 [ 72.2,100.0]     21761
-judge               10  100.0 [ 72.2,100.0]      3081
-mad                 10  100.0 [ 72.2,100.0]     15371
-reconcile           10  100.0 [ 72.2,100.0]      6278
-sc_gemini-flash-lite    11  100.0 [ 74.1,100.0]      1798
+cot_gemini-flash-lite    15  100.0 [ 79.6,100.0]       365
+cot_gptoss120b      15  100.0 [ 79.6,100.0]       501
+cot_qwen27b         15   93.3 [ 70.2, 98.8]       691
+excre               15  100.0 [ 79.6,100.0]     22413
+judge               15  100.0 [ 79.6,100.0]      2899
+mad                 15  100.0 [ 79.6,100.0]     14558
+reconcile           15  100.0 [ 79.6,100.0]      6320
+sc_gemini-flash-lite    15  100.0 [ 79.6,100.0]      1796
 
 == excre vs baselines (exact McNemar, Holm-adjusted) ==
 baseline             n  only-excre  only-base        p    p_adj
-cot_gemini-flash-lite    10           0          0   1.0000   1.0000
-cot_gptoss120b      10           0          0   1.0000   1.0000
-cot_qwen27b         10           1          0   1.0000   1.0000
-judge               10           0          0   1.0000   1.0000
-mad                 10           0          0   1.0000   1.0000
-reconcile           10           0          0   1.0000   1.0000
-sc_gemini-flash-lite    10           0          0   1.0000   1.0000
+cot_gemini-flash-lite    15           0          0   1.0000   1.0000
+cot_gptoss120b      15           0          0   1.0000   1.0000
+cot_qwen27b         15           1          0   1.0000   1.0000
+judge               15           0          0   1.0000   1.0000
+mad                 15           0          0   1.0000   1.0000
+reconcile           15           0          0   1.0000   1.0000
+sc_gemini-flash-lite    15           0          0   1.0000   1.0000
 
 == gating signal vs correctness ==
 system            spearman    AURC  acc@70%  acc@80%  acc@90%
 cot_gemini-flash-lite     0.000   0.000    100.0    100.0    100.0
 cot_gptoss120b       0.000   0.000    100.0    100.0    100.0
-cot_qwen27b          0.000   0.110     85.7     87.5     88.9
+cot_qwen27b          0.000   0.099     90.0     91.7     92.3
 excre                0.000   0.000    100.0    100.0    100.0
 judge                0.000   0.000    100.0    100.0    100.0
 mad                  0.000   0.000    100.0    100.0    100.0
 reconcile            0.000   0.000    100.0    100.0    100.0
 sc_gemini-flash-lite     0.000   0.000    100.0    100.0    100.0
 
-excre: converged early on 7/10 items, mean rounds 2.40
+excre: converged early on 8/15 items, mean rounds 2.53
   schema compliance (valid after <=1 repair / repair used):
-    gemini-flash-lite  94.1% valid,  2.9% repaired  (34 calls)
-    gptoss120b       100.0% valid,  0.0% repaired  (34 calls)
-    qwen27b          100.0% valid,  0.0% repaired  (34 calls)
+    gemini-flash-lite  96.2% valid,  1.9% repaired  (53 calls)
+    gptoss120b       100.0% valid,  0.0% repaired  (53 calls)
+    qwen27b          100.0% valid,  1.9% repaired  (53 calls)
