@@ -1,0 +1,1 @@
+{"text": "```json\n{\n  \"answer\": \"(D)\",\n  \"explanation\": \"In our solar system, planets are held by gravity and orbit around the Sun.\",\n  \"confidence\": 1.0\n}\n```", "usage": {"prompt_tokens": 88, "completion_tokens": 47, "finish": "stop"}}

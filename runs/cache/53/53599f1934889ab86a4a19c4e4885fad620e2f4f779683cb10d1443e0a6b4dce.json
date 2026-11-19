@@ -1,0 +1,1 @@
+{"text": "```json\n{\n  \"answer\": \"D\",\n  \"explanation\": \"Planets in our solar system are held by gravity and revolve in orbits around the central star, which is the Sun. Therefore, option (D) is the correct choice.\",\n  \"confidence\": 1.0\n}\n```", "usage": {"prompt_tokens": 335, "completion_tokens": 66, "finish": "stop"}}
