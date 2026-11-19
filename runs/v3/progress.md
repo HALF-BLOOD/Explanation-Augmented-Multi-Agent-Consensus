@@ -1,13 +1,12 @@
 # runs/v3
 
-updated 2026-11-18 07:21 UTC, +189 this session, stopped: question 15 waiting on qwen27b  
-qwen27b benched: daily quota used up (TPD limit 200000)
+updated 2026-11-19 06:53 UTC, +81 this session
 
 questions finished by every system that runs them
 
 | gsm8k | strategyqa | truthfulqa | arc_challenge | mmlu |
 |---|---|---|---|---|
-| 15/300 | 15/300 | 15/300 | 15/300 | 14/300 |
+| 17/300 | 17/300 | 17/300 | 16/300 | 16/300 |
 
 done / total (accuracy so far)
 
@@ -15,37 +14,37 @@ done / total (accuracy so far)
 
 | system | gsm8k | strategyqa | truthfulqa | arc_challenge | mmlu |
 |---|---|---|---|---|---|
-| cot:gptoss120b | 15/300 (93%) | 15/300 (80%) | 15/300 (80%) | 15/300 (100%) | 15/300 (93%) |
-| cot:qwen27b | 15/300 (93%) | 15/300 (47%) | 15/300 (73%) | 15/300 (93%) | 15/300 (93%) |
-| cot:gemini-flash-lite | 15/300 (93%) | 15/300 (73%) | 15/300 (67%) | 15/300 (100%) | 15/300 (87%) |
-| excre | 15/300 (93%) | 15/300 (60%) | 15/300 (73%) | 15/300 (100%) | 15/300 (100%) |
-| mad | 15/300 (93%) | 15/300 (80%) | 15/300 (87%) | 15/300 (100%) | 14/300 (93%) |
-| sc:gemini-flash-lite | 15/300 (93%) | 15/300 (73%) | 15/300 (67%) | 15/300 (100%) | 15/300 (93%) |
+| cot:gptoss120b | 17/300 (94%) | 17/300 (76%) | 17/300 (76%) | 17/300 (100%) | 16/300 (94%) |
+| cot:qwen27b | 17/300 (94%) | 17/300 (53%) | 17/300 (71%) | 17/300 (94%) | 16/300 (94%) |
+| cot:gemini-flash-lite | 17/300 (94%) | 17/300 (76%) | 17/300 (65%) | 17/300 (100%) | 16/300 (88%) |
+| excre | 17/300 (94%) | 17/300 (59%) | 17/300 (71%) | 17/300 (100%) | 16/300 (100%) |
+| mad | 17/300 (94%) | 17/300 (82%) | 17/300 (82%) | 17/300 (100%) | 16/300 (94%) |
+| sc:gemini-flash-lite | 17/300 (94%) | 17/300 (76%) | 17/300 (65%) | 17/300 (100%) | 16/300 (94%) |
 
 ## saboteur
 
 | system | gsm8k | truthfulqa |
 |---|---|---|
-| excre_adv | 15/40 (93%) | 15/40 (80%) |
-| mad_adv | 15/40 (93%) | 15/40 (73%) |
+| excre_adv | 17/40 (94%) | 17/40 (76%) |
+| mad_adv | 17/40 (94%) | 17/40 (71%) |
 
 ## ablations
 
 | system | strategyqa |
 |---|---|
-| excre_bare | 15/40 (73%) |
-| excre_noda | 15/40 (60%) |
-| excre_noanchor | 15/40 (60%) |
+| excre_bare | 17/40 (71%) |
+| excre_noda | 17/40 (59%) |
+| excre_noanchor | 17/40 (59%) |
 
 ## same-model
 
 | system | strategyqa |
 |---|---|
-| excre_same:qwen27b | 15/30 (47%) |
+| excre_same:qwen27b | 17/30 (47%) |
 
 ## baselines
 
 | system | strategyqa | truthfulqa | arc_challenge |
 |---|---|---|---|
-| judge | 15/30 (67%) | 15/30 (80%) | 15/30 (100%) |
-| reconcile | 15/30 (67%) | 15/30 (80%) | 15/30 (100%) |
+| judge | 17/30 (71%) | 17/30 (76%) | 16/30 (100%) |
+| reconcile | 17/30 (65%) | 17/30 (76%) | 16/30 (100%) |

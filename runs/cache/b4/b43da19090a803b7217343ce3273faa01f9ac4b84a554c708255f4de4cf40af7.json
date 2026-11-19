@@ -1,0 +1,1 @@
+{"text": "```json\n{\n  \"answer\": \"No\",\n  \"explanation\": \"Actuaries undergo rigorous training in advanced mathematics, probability, and statistics, which includes a foundational understanding of basic number theory concepts like prime numbers.\",\n  \"confidence\": 1.0\n}\n```", "usage": {"prompt_tokens": 65, "completion_tokens": 59, "finish": "stop"}}
