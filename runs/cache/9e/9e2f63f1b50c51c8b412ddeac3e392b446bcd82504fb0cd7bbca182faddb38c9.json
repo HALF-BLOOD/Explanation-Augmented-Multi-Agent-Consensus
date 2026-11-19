@@ -1,0 +1,1 @@
+{"text": "```json\n{\"answer\": \"D\", \"explanation\": \"The Earth stays in its orbit around the Sun because the Sun's gravitational pull provides the necessary centripetal force to keep it in a curved path, counteracting its inertia to move in a straight line.\", \"confidence\": 1.0}\n```", "usage": {"prompt_tokens": 362, "completion_tokens": 65, "finish": "stop"}}

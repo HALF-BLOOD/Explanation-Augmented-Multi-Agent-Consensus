@@ -1,0 +1,1 @@
+{"text": "```json\n{\"answer\": \"D\", \"explanation\": \"The Earth remains in orbit around the Sun primarily due to the Sun's gravitational pull, which provides the centripetal force necessary to keep the Earth on a roughly circular path.\", \"confidence\": 1.0}\n```", "usage": {"prompt_tokens": 106, "completion_tokens": 59, "finish": "stop"}}

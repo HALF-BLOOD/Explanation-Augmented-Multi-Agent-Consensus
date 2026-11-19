@@ -1,0 +1,1 @@
+{"text": "```json\n{\n  \"answer\": \"D\",\n  \"explanation\": \"The Earth stays in its orbit around the Sun because the Sun's gravitational pull provides the necessary centripetal force to keep it from flying off into space, balancing its inertia.\",\n  \"confidence\": 1.0\n}\n```", "usage": {"prompt_tokens": 333, "completion_tokens": 67, "finish": "stop"}}
