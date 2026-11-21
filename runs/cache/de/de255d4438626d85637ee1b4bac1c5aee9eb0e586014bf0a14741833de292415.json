@@ -1,0 +1,1 @@
+{"text": "```json\n{\n  \"answer\": \"A\",\n  \"explanation\": \"Garden plants require soil, air, water, and sunlight to survive, which makes a total of 4 resources mentioned in the premise.\",\n  \"confidence\": 1.0\n}\n```", "usage": {"prompt_tokens": 121, "completion_tokens": 58, "finish": "stop"}}
