@@ -1,0 +1,1 @@
+{"text": "```json\n{\"answer\": \"C\", \"explanation\": \"A light-year is the distance light travels in one year. Therefore, light from a star situated 125,000 light-years away takes 125,000 years to reach Earth.\", \"confidence\": 1.0}\n```", "usage": {"prompt_tokens": 420, "completion_tokens": 69, "finish": "stop"}}

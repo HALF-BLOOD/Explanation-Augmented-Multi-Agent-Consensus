@@ -1,0 +1,1 @@
+{"text": "{\n  \"answer\": \"C\",\n  \"explanation\": \"A cardiac flatline (asystole) is a state of no electrical activity, so delivering a shock will not restart the heart. The recommended treatment is high-quality CPR with medications, not defibrillation.\",\n  \"confidence\": 0.99\n}", "usage": {"prompt_tokens": 246, "completion_tokens": 179, "finish": "stop"}}

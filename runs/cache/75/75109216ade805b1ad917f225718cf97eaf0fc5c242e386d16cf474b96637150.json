@@ -1,0 +1,1 @@
+{"text": "{\n\"answer\": \"C\",\n\"explanation\": \"By definition, a light-year is the distance light travels in one year. Therefore, if a star is 125,000 light-years away, the light observed from it today has been traveling for exactly 125,000 years to cover that distance.\",\n\"confidence\": 1.0\n}", "usage": {"prompt_tokens": 417, "completion_tokens": 83, "finish": "stop"}}

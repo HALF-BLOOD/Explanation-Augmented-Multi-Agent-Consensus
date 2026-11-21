@@ -1,0 +1,1 @@
+{"text": "{\n  \"answer\": \"C\",\n  \"explanation\": \"A light-year is the distance light travels in one year. Therefore, light from a star that is 125,000 light\u2011years away has taken 125,000 years to reach us.\",\n  \"confidence\": 1.0\n}", "usage": {"prompt_tokens": 196, "completion_tokens": 117, "finish": "stop"}}

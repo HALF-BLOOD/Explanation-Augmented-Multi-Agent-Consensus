@@ -1,0 +1,1 @@
+{"text": "```json\n{\"answer\": \"C\", \"explanation\": \"A light-year is defined as the distance that light travels in one Earth year. Therefore, if a star is 125,000 light-years away, it means the light has been traveling for 125,000 years to reach Earth.\", \"confidence\": 1.0}\n```", "usage": {"prompt_tokens": 151, "completion_tokens": 80, "finish": "stop"}}

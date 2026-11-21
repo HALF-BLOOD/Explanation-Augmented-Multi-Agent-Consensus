@@ -1,0 +1,1 @@
+{"text": "{\n  \"answer\": \"C\",\n  \"explanation\": \"A light\u2011year is defined as the distance light travels in one Earth year. Therefore, if a star is 125,000 light\u2011years away, the light we see from it has been in transit for exactly 125,000 years.\",\n  \"confidence\": 0.99\n}", "usage": {"prompt_tokens": 407, "completion_tokens": 196, "finish": "stop"}}
