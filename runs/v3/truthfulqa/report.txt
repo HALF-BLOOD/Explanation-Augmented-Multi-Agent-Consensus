@@ -1,55 +1,55 @@
 
 == accuracy (runs/v3/truthfulqa) ==
 system               n   acc%          95% CI  tok/item
-cot_gemini-flash-lite    25   64.0 [ 44.5, 79.8]       375
-cot_gptoss120b      25   76.0 [ 56.6, 88.5]       522
-cot_qwen27b         24   66.7 [ 46.7, 82.0]       904
-excre               24   75.0 [ 55.1, 88.0]     23674
-excre_adv           24   79.2 [ 59.5, 90.8]     21778
-judge               24   75.0 [ 55.1, 88.0]      3297
-mad                 24   83.3 [ 64.1, 93.3]     16993
-mad_adv             24   66.7 [ 46.7, 82.0]     20757
-reconcile           24   79.2 [ 59.5, 90.8]      6876
-sc_gemini-flash-lite    25   64.0 [ 44.5, 79.8]      1973
+cot_gemini-flash-lite    29   69.0 [ 50.8, 82.7]       373
+cot_gptoss120b      29   79.3 [ 61.6, 90.2]       528
+cot_qwen27b         29   72.4 [ 54.3, 85.3]       864
+excre               29   79.3 [ 61.6, 90.2]     24186
+excre_adv           29   82.8 [ 65.5, 92.4]     22232
+judge               28   78.6 [ 60.5, 89.8]      3254
+mad                 29   86.2 [ 69.4, 94.5]     16671
+mad_adv             28   71.4 [ 52.9, 84.7]     20661
+reconcile           28   82.1 [ 64.4, 92.1]      6831
+sc_gemini-flash-lite    29   69.0 [ 50.8, 82.7]      1946
 
 == excre vs baselines (exact McNemar, Holm-adjusted) ==
 baseline             n  only-excre  only-base        p    p_adj
-cot_gemini-flash-lite    24           5          2   0.4531   1.0000
-cot_gptoss120b      24           3          3   1.0000   1.0000
-cot_qwen27b         24           3          1   0.6250   1.0000
-judge               24           2          2   1.0000   1.0000
-mad                 24           1          3   0.6250   1.0000
-mad_adv             24           4          2   0.6875   1.0000
-reconcile           24           1          2   1.0000   1.0000
-sc_gemini-flash-lite    24           4          1   0.3750   1.0000
+cot_gemini-flash-lite    29           5          2   0.4531   1.0000
+cot_gptoss120b      29           3          3   1.0000   1.0000
+cot_qwen27b         29           3          1   0.6250   1.0000
+judge               28           2          2   1.0000   1.0000
+mad                 29           1          3   0.6250   1.0000
+mad_adv             28           4          2   0.6875   1.0000
+reconcile           28           1          2   1.0000   1.0000
+sc_gemini-flash-lite    29           4          1   0.3750   1.0000
 
 == gating signal vs correctness ==
 system            spearman    AURC  acc@70%  acc@80%  acc@90%
-cot_gemini-flash-lite     0.000   0.322     64.7     65.0     68.2
-cot_gptoss120b       0.000   0.191     76.5     75.0     77.3
-cot_qwen27b          0.000   0.357     68.8     73.7     71.4
-excre                0.222   0.164     87.5     73.7     76.2
-excre_adv            0.304   0.191     93.8     89.5     81.0
-judge                0.000   0.270     75.0     78.9     76.2
-mad                  0.169   0.200     87.5     84.2     85.7
-mad_adv             -0.614   0.599     56.2     63.2     66.7
-reconcile            0.406   0.133     81.2     78.9     81.0
-sc_gemini-flash-lite     0.554   0.176     82.4     80.0     72.7
+cot_gemini-flash-lite     0.000   0.323     65.0     65.2     65.4
+cot_gptoss120b       0.000   0.195     75.0     73.9     76.9
+cot_qwen27b          0.000   0.346     70.0     65.2     69.2
+excre                0.224   0.124     90.0     78.3     80.8
+excre_adv            0.306   0.160     95.0     95.7     84.6
+judge                0.000   0.264     78.9     77.3     76.0
+mad                  0.192   0.184     85.0     87.0     88.5
+mad_adv             -0.617   0.557     63.2     63.6     68.0
+reconcile            0.413   0.135     78.9     81.8     84.0
+sc_gemini-flash-lite     0.577   0.169     80.0     82.6     76.9
 
-== adversarial insider (24 paired items) ==
-  clean      acc  75.0  trust 0.778  coalition-IMRC 0.607  fragility 0.369
-  sabotaged  acc  79.2  trust 0.591  coalition-IMRC 0.370  fragility 0.259
-  fragility AUROC (sabotaged vs clean): 0.349
-  consensus flipped to wrong on 1/24 items
+== adversarial insider (29 paired items) ==
+  clean      acc  79.3  trust 0.785  coalition-IMRC 0.607  fragility 0.374
+  sabotaged  acc  82.8  trust 0.610  coalition-IMRC 0.403  fragility 0.268
+  fragility AUROC (sabotaged vs clean): 0.358
+  consensus flipped to wrong on 1/29 items
 
-excre: converged early on 11/24 items, mean rounds 2.62
+excre: converged early on 14/29 items, mean rounds 2.66
   schema compliance (valid after <=1 repair / repair used):
-    gemini-flash-lite  97.7% valid,  5.7% repaired  (87 calls)
-    gptoss120b       100.0% valid,  4.6% repaired  (87 calls)
-    qwen27b           98.9% valid,  2.3% repaired  (87 calls)
+    gemini-flash-lite  98.1% valid,  5.7% repaired  (106 calls)
+    gptoss120b       100.0% valid,  3.8% repaired  (106 calls)
+    qwen27b           99.1% valid,  2.8% repaired  (106 calls)
 
-excre_adv: converged early on 14/24 items, mean rounds 2.38
+excre_adv: converged early on 17/29 items, mean rounds 2.41
   schema compliance (valid after <=1 repair / repair used):
-    gemini-flash-lite 100.0% valid,  4.9% repaired  (81 calls)
-    gptoss120b       100.0% valid,  2.5% repaired  (81 calls)
-    qwen27b          100.0% valid,  2.5% repaired  (81 calls)
+    gemini-flash-lite 100.0% valid,  4.0% repaired  (99 calls)
+    gptoss120b       100.0% valid,  2.0% repaired  (99 calls)
+    qwen27b          100.0% valid,  2.0% repaired  (99 calls)
