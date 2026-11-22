@@ -1,0 +1,1 @@
+{"text": "{\n  \"answer\": \"B\",\n  \"explanation\": \"Newton's second law states F = m\u00b7a, so a = F/m. With mass unchanged, multiplying the force by 4 multiplies the acceleration by the same factor. Hence the acceleration increases fourfold.\",\n  \"confidence\": 0.99\n}", "usage": {"prompt_tokens": 194, "completion_tokens": 195, "finish": "stop"}}
