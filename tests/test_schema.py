@@ -78,3 +78,23 @@ def test_final_answer_survives_markdown():
     assert normalise_letter(extract_final_answer("**Final Answer:** **B**")) == "B"
     assert extract_final_answer("Final answer: 12\nlater\nFinal answer: 15") == "15"
     assert extract_final_answer("the total is 42 apples") == "42"
+
+
+def test_latex_backslashes_and_bare_keys_are_mended():
+    raw = ('```json\n{\n  "answer": "B",\n  "confidence": 0.9,\n  "steps": [\n'
+           r'    {"id": 1, "claim": "impulse ($F \Delta t = \Delta p$)", '
+           '"evidence": "theorem", "weight": 1, "depends_on": []}\n  ],\n'
+           '  "considered": [\n    {\n      "answer": "A",\n'
+           '      reason_rejected: "too small"\n    }\n  ]\n}\n```')
+    p = parse_path(raw)
+    assert p["parsed"] and p["answer"] == "B"
+    assert r"\Delta" in p["steps"][0]["claim"]
+
+
+def test_cut_off_json_keeps_its_answer():
+    p = parse_path('{\n  "answer": "No",\n  "confidence": 0.95,\n  "steps": [\n'
+                   '    {"id": 1, "claim": "the river was')
+    assert not p["parsed"]
+    assert p["answer"] == "No"
+    p = parse_path('{"answer": 1441, "steps": [{"id": 1, "claim": "x')
+    assert p["answer"] == "1441"

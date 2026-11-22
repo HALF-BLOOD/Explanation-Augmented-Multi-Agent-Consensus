@@ -97,14 +97,9 @@ def parse_path(text):
     block = _find_json_block(text or "")
     if block is None:
         return _fallback(text)
-    try:
-        obj = json.loads(block)
-    except json.JSONDecodeError:
-        # Clean trailing commas if present
-        try:
-            obj = json.loads(re.sub(r",\s*([}\]])", r"\1", block))
-        except json.JSONDecodeError:
-            return _fallback(text)
+    obj = _loads(block)
+    if obj is None:
+        return _fallback(text)
     if not isinstance(obj, dict):
         return _fallback(text)
 
@@ -130,9 +125,33 @@ def parse_path(text):
     return path
 
 
+# mends tried in turn on JSON that won't load: trailing commas, LaTeX
+# backslashes like \Delta, and keys left unquoted at the start of a line
+_MENDS = [
+    lambda b: re.sub(r",\s*([}\]])", r"\1", b),
+    lambda b: re.sub(r'\\(?!["\\/bfnrt]|u[0-9a-fA-F]{4})', r"\\\\", b),
+    lambda b: re.sub(r'(\n\s*)([A-Za-z_]\w*)\s*:', r'\1"\2":', b),
+]
+
+
+def _loads(block):
+    for mend in [lambda b: b] + _MENDS:
+        block = mend(block)
+        try:
+            return json.loads(block)
+        except json.JSONDecodeError:
+            pass
+    return None
+
+
 def _fallback(text, answer="", confidence=0.3):
     """Fallback representation when output cannot be fully parsed as JSON."""
     text = (text or "").strip()
+    if not answer:
+        # broken or cut-off JSON still usually has its "answer" field intact
+        m = re.search(r'"answer"\s*:\s*(?:"([^"\n]*)"|([^,}\s]+))', text)
+        if m:
+            answer = (m.group(1) if m.group(1) is not None else m.group(2)).strip()
     if not answer:
         m = re.search(r"(?:final answer|answer)\s*[:=]?\s*(.+)", text,
                       re.IGNORECASE)

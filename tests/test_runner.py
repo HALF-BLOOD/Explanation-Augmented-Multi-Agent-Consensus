@@ -70,3 +70,25 @@ def test_debate_keeps_rounds_and_takes_a_saboteur(tmp_path):
     rounds = {t["round"] for t in recs[0]["trail"]}
     assert rounds == set(range(CFG["excre"]["rounds"] + 1))
     assert recs[0]["system"] == "mad_adv"
+
+
+def test_steps_first_variant_only_reorders_the_schema(tmp_path):
+    from excre import prompts
+    # the run in runs/v3 is frozen on this hash; the old prompts must not move
+    assert prompts.fingerprint() == "4a59f8a0125c253b"
+    seen = []
+
+    class Spy(MockModel):
+        def chat(self, messages, **kw):
+            seen.append(messages[-1]["content"])
+            return super().chat(messages, **kw)
+
+    spies = [Spy(m.name, m.persona) for m in MODELS]
+    run_system("excre_stepsfirst", ITEMS[:1], spies, SIM, CFG,
+               str(tmp_path / "sf.jsonl"), log=lambda *_: None)
+    rec = read_jsonl(str(tmp_path / "sf.jsonl"))[0]
+    assert rec["system"] == "excre_stepsfirst" and rec["answer"]
+    assert seen and all(prompts.SCHEMA_STEPS_FIRST in p for p in seen)
+    assert prompts.SCHEMA_STEPS_FIRST.find('"steps"') < prompts.SCHEMA_STEPS_FIRST.find('"answer"')
+    assert (prompts.SCHEMA_SPEC.replace(" ", "").replace("\n", "").count('"')
+            == prompts.SCHEMA_STEPS_FIRST.replace(" ", "").replace("\n", "").count('"'))

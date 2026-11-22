@@ -83,9 +83,11 @@ on offline mocks so tests never need keys.
 
 Systems a run can name: `excre`, `cot:<model>`, `sc:<model>`, `mad`,
 `reconcile`, `judge`; the ablations `excre_bare` (no anchor, no devil's
-advocate), `excre_noda`, `excre_noanchor` and `excre_same:<model>` (three
+advocate), `excre_noda`, `excre_noanchor`, `excre_stepsfirst` (the schema
+asks for the steps before the answer) and `excre_same:<model>` (three
 seeded copies of one model); and `excre_adv` / `mad_adv` with a rotating
-saboteur.
+saboteur. The hypotheses fixed before the confirmation data are in
+`PREREGISTRATION.md`.
 
 ## Running on Kaggle (incremental)
 

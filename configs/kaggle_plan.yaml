@@ -40,3 +40,10 @@ stages:
     n: 30
     datasets: [strategyqa, truthfulqa, arc_challenge]
     systems: [judge, reconcile]   # judge reuses the cached cot answers
+
+  # added 22 Nov: the excre schema asks for the answer before the steps, so
+  # this reruns the first 40 questions with the steps first
+  - name: schema-order
+    n: 40
+    datasets: [gsm8k, strategyqa, truthfulqa, arc_challenge, mmlu]
+    systems: [excre_stepsfirst]

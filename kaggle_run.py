@@ -74,17 +74,27 @@ def check_frozen(out, cfg):
         "excre": cfg["excre"], "imrc": cfg["imrc"], "trust": cfg["trust"],
         "sc": cfg["sc"], "judge": cfg["judge"],
         "prompts": prompts.fingerprint(),
+        "prompts_stepsfirst": prompts.fingerprint(prompts.SCHEMA_STEPS_FIRST),
     }
     path = os.path.join(out, "manifest.json")
     if os.path.exists(path):
         with open(path, encoding="utf-8") as f:
-            was = json.load(f)["frozen"]
-        changed = [k for k in now if was.get(k) != now[k]]
+            manifest = json.load(f)
+        was = manifest["frozen"]
+        changed = [k for k in now if k in was and was[k] != now[k]]
         if changed:
             sys.exit(f"{path}: {', '.join(changed)} changed since this run "
                      f"started, so new results would not be comparable with "
                      f"the old ones. Undo the change, or point `out` in the "
                      f"plan at a new folder to start a fresh run.")
+        # something added after the run started is frozen from its first session
+        new = [k for k in now if k not in was]
+        if new:
+            stamp = datetime.now(timezone.utc).isoformat(timespec="seconds")
+            was.update({k: now[k] for k in new})
+            manifest.setdefault("added", {}).update({k: stamp for k in new})
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(manifest, f, indent=1)
         return
     os.makedirs(out, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:

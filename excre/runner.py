@@ -14,7 +14,8 @@ from .llm import ModelUnavailable, Seeded
 # seeded copies of one model in place of the mixed group
 VARIANTS = {"bare": {"devils_advocate": False, "anchor": False},
             "noda": {"devils_advocate": False},
-            "noanchor": {"anchor": False}}
+            "noanchor": {"anchor": False},
+            "stepsfirst": {"steps_first": True}}
 
 
 def done_ids(path):

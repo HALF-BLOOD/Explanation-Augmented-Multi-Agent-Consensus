@@ -129,3 +129,25 @@ def test_sample_grows_without_touching_the_questions_already_drawn(tmp_path,
     except SystemExit:
         pass
     assert kr.load_items("a", 12, str(tmp_path)) == more
+
+
+def test_manifest_takes_new_settings_but_refuses_changed_ones(tmp_path, monkeypatch):
+    import json
+    cfg = {"models": [], "excre": {}, "imrc": {}, "trust": {}, "sc": {}, "judge": {}}
+    kr.check_frozen(str(tmp_path), cfg)
+    path = tmp_path / "manifest.json"
+    manifest = json.loads(path.read_text())
+    del manifest["frozen"]["prompts_stepsfirst"]
+    path.write_text(json.dumps(manifest))
+
+    kr.check_frozen(str(tmp_path), cfg)
+    manifest = json.loads(path.read_text())
+    assert "prompts_stepsfirst" in manifest["frozen"]
+    assert "prompts_stepsfirst" in manifest["added"]
+
+    monkeypatch.setattr(kr.prompts, "fingerprint", lambda spec=None: "edited")
+    try:
+        kr.check_frozen(str(tmp_path), cfg)
+        raise AssertionError("an edited prompt should stop the run")
+    except SystemExit:
+        pass

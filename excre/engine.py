@@ -50,6 +50,7 @@ def run_excre(item, models, simfn, cfg, saboteur=None):
     ev_thr = cfg["imrc"].get("evidence_threshold", 0.5)
     norm = make_normaliser(item["format"])
     fmt = prompts.format_instruction(item)
+    spec = prompts.SCHEMA_STEPS_FIRST if ex.get("steps_first") else prompts.SCHEMA_SPEC
 
     def system_for(model):
         if saboteur and model.name == saboteur["model"]:
@@ -64,7 +65,7 @@ def run_excre(item, models, simfn, cfg, saboteur=None):
     round0 = {}
     for m in models:
         path, raw, flags = _generate_path(
-            m, prompts.initial(item["question"], fmt), system_for(m), gen,
+            m, prompts.initial(item["question"], fmt, spec), system_for(m), gen,
             tokens)
         current[m.name] = path
         round0[m.name] = path
@@ -89,7 +90,8 @@ def run_excre(item, models, simfn, cfg, saboteur=None):
             peers = [schema.path_to_display(current[p.name], f"peer {p.name}")
                      for p in models if p.name != m.name]
             prompt = prompts.revision(item["question"], fmt, own, anchor,
-                                      peers, devils_advocate=(idx == da_index))
+                                      peers, devils_advocate=(idx == da_index),
+                                      spec=spec)
             path, raw, flags = _generate_path(m, prompt, system_for(m),
                                               gen, tokens)
             revised[m.name] = path

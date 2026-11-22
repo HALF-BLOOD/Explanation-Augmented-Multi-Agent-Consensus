@@ -19,17 +19,36 @@ SCHEMA_SPEC = """Respond with a single JSON object and nothing else:
 Keep steps atomic (one inference each, max 8 steps). Weights should reflect
 how much the answer would change if the step were wrong."""
 
+# same fields with the reasoning ahead of the answer, so models without a
+# hidden reasoning phase work the problem out before committing to an answer
+SCHEMA_STEPS_FIRST = """Respond with a single JSON object and nothing else:
+{
+  "steps": [
+    {"id": 1, "claim": "<one atomic reasoning step>",
+     "evidence": "<the fact, rule, or computation this step rests on>",
+     "weight": <how much this step matters to the answer, 0.0 to 1.0>,
+     "depends_on": [<ids of earlier steps this one builds on>]}
+  ],
+  "answer": "<final answer only: the number, letter, or yes/no>",
+  "confidence": <0.0 to 1.0>,
+  "considered": [
+    {"answer": "<an alternative you weighed>", "reason_rejected": "<why not>"}
+  ]
+}
+Keep steps atomic (one inference each, max 8 steps). Weights should reflect
+how much the answer would change if the step were wrong."""
 
-def initial(question, answer_format):
+
+def initial(question, answer_format, spec=SCHEMA_SPEC):
     return (
         f"Solve the following problem. {answer_format}\n\n"
         f"Problem: {question}\n\n"
-        f"Think carefully, then {SCHEMA_SPEC}"
+        f"Think carefully, then {spec}"
     )
 
 
 def revision(question, answer_format, own_path_display, own_anchor_display,
-             peer_displays, devils_advocate=False):
+             peer_displays, devils_advocate=False, spec=SCHEMA_SPEC):
     peers = "\n\n".join(peer_displays)
     parts = [
         f"You previously answered this problem. Your peers (different AI "
@@ -54,7 +73,7 @@ def revision(question, answer_format, own_path_display, own_anchor_display,
             "weakest step in the current majority position and attack it "
             "directly in your steps, even if you end up agreeing overall."
         )
-    parts.append(SCHEMA_SPEC)
+    parts.append(spec)
     return "\n\n".join(parts)
 
 
@@ -151,10 +170,10 @@ def format_instruction(item):
     return base
 
 
-def fingerprint():
+def fingerprint(spec=SCHEMA_SPEC):
     """Hash of every rendered template, to notice prompt edits mid-run."""
     rendered = [
-        initial("q", "f"), revision("q", "f", "o", "a", ["p"], True),
+        initial("q", "f", spec), revision("q", "f", "o", "a", ["p"], True, spec),
         SABOTEUR_SYSTEM, cot("q", "f"), mad_revision("q", "f", "o", ["p"]),
         reconcile_initial("q", "f"), reconcile_discussion("q", "f", "s"),
         judge_synthesis("q", "f", ["c"]), repr(sorted(FORMAT_INSTRUCTIONS.items())),

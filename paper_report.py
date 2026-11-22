@@ -194,29 +194,73 @@ def signal_section(rows, datasets, names, iters):
                        [[s, auc_ci([r[s] for r in full], [r["correct"] for r in full], iters)]
                         for s in names if s not in ("agreement", "trust")])
 
-    y = np.array([r["correct"] for r in rows], dtype=int)
-    if min(y.sum(), len(y) - y.sum()) >= 10:
-        def oof(cols):
-            X = np.array([[r[c] for c in cols] for r in rows])
-            model = make_pipeline(StandardScaler(), LogisticRegression())
-            folds = StratifiedKFold(5, shuffle=True, random_state=0)
-            return cross_val_predict(model, X, y, cv=folds, method="predict_proba")[:, 1]
-        base, plus = oof(["agreement", "confidence"]), oof(["agreement", "confidence", "imrc_coal"])
-        rng = random.Random(0)
-        diffs = []
-        for _ in range(iters):
-            idx = [rng.randrange(len(y)) for _ in y]
-            if len(set(y[idx])) == 2:
-                diffs.append(roc_auc_score(y[idx], plus[idx]) - roc_auc_score(y[idx], base[idx]))
-        diffs.sort()
-        lines += ["Logistic regression on correctness, 5-fold out-of-fold AUROC:", ""]
-        lines += table(["features", "AUROC"], [
-            ["agreement + confidence", f"{roc_auc_score(y, base):.3f}"],
-            ["agreement + confidence + IMRC", f"{roc_auc_score(y, plus):.3f}"],
-            ["gain from IMRC [95% CI]",
-             f"{roc_auc_score(y, plus) - roc_auc_score(y, base):+.3f} "
-             f"[{diffs[int(0.025 * len(diffs))]:+.3f}, {diffs[int(0.975 * len(diffs)) - 1]:+.3f}]"]])
+    lines += gain_table(rows, ["imrc_coal"], "IMRC", iters)
     return lines
+
+
+def gain_table(rows, extra, label, iters):
+    """Out-of-fold AUROC of agreement + confidence, with and without `extra`."""
+    y = np.array([r["correct"] for r in rows], dtype=int)
+    if min(y.sum(), len(y) - y.sum()) < 10:
+        return []
+
+    def oof(cols):
+        X = np.array([[r[c] for c in cols] for r in rows])
+        model = make_pipeline(StandardScaler(), LogisticRegression())
+        folds = StratifiedKFold(5, shuffle=True, random_state=0)
+        return cross_val_predict(model, X, y, cv=folds, method="predict_proba")[:, 1]
+    base, plus = oof(["agreement", "confidence"]), oof(["agreement", "confidence"] + extra)
+    rng = random.Random(0)
+    diffs = []
+    for _ in range(iters):
+        idx = [rng.randrange(len(y)) for _ in y]
+        if len(set(y[idx])) == 2:
+            diffs.append(roc_auc_score(y[idx], plus[idx]) - roc_auc_score(y[idx], base[idx]))
+    diffs.sort()
+    lines = ["Logistic regression on correctness, 5-fold out-of-fold AUROC:", ""]
+    return lines + table(["features", "AUROC"], [
+        ["agreement + confidence", f"{roc_auc_score(y, base):.3f}"],
+        [f"agreement + confidence + {label}", f"{roc_auc_score(y, plus):.3f}"],
+        [f"gain from {label} [95% CI]",
+         f"{roc_auc_score(y, plus) - roc_auc_score(y, base):+.3f} "
+         f"[{diffs[int(0.025 * len(diffs))]:+.3f}, {diffs[int(0.975 * len(diffs)) - 1]:+.3f}]"]])
+
+
+# fixed in PREREGISTRATION.md on 22 Nov 2026, before any of these items ran
+CONFIRM_FROM = 32
+
+
+def confirmation_section(rich, iters):
+    scopes = [(f"excre, questions {CONFIRM_FROM + 1}+",
+               [r for r in rich.get("excre", []) if question_index(r) >= CONFIRM_FROM]),
+              ("excre_stepsfirst, all", rich.get("excre_stepsfirst", []))]
+    scopes = [(label, rs) for label, rs in scopes if rs]
+    if not scopes:
+        return []
+    lines = ["## 2b. Pre-registered confirmation (PREREGISTRATION.md)", "",
+             "H1: coalition IMRC before the exchange > 0.5. H2: the rise in "
+             "coalition IMRC during the exchange flags wrong answers (AUROC of "
+             "-induced > 0.5). H3: final coalition IMRC is not above 0.5. "
+             "H4: round-0 IMRC and induced add to agreement + confidence.", ""]
+    body = []
+    for label, rs in scopes:
+        y = [r["correct"] for r in rs]
+        body.append([label, len(rs), len(rs) - sum(y),
+                     auc_ci([r["imrc_coal_r0"] for r in rs], y, iters),
+                     auc_ci([-r["induced"] for r in rs], y, iters),
+                     auc_ci([r["imrc_coal"] for r in rs], y, iters),
+                     auc_ci([r["confidence"] for r in rs], y, iters)])
+    lines += table(["items", "n", "wrong", "H1 IMRC r0", "H2 -induced",
+                    "H3 final IMRC", "confidence (reference)"], body)
+    for label, rs in scopes:
+        part = gain_table(rs, ["imrc_coal_r0", "induced"], "IMRC r0 + induced", iters)
+        if part:
+            lines += [f"H4 on {label}:", ""] + part
+    return lines
+
+
+def question_index(row):
+    return int(row["id"].rsplit("-", 1)[1])
 
 
 def selective_section(plain, rows):
@@ -307,18 +351,22 @@ def ablation_section(plain, rich):
             continue
         for label, src in ((f"excre (items of {name})", full), (name, theirs)):
             rs = [src[i] for i in common]
-            a = auc([r["imrc_coal"] for r in rs], [r["correct"] for r in rs])
-            body.append([label, len(rs), pct(sum(r["correct"] for r in rs) / len(rs)),
+            y = [r["correct"] for r in rs]
+            cells = [auc([r[s] for r in rs], y) for s in ("imrc_coal", "imrc_coal_r0")]
+            cells.append(auc([-r["induced"] for r in rs], y))
+            body.append([label, len(rs), pct(sum(r["correct_r0"] for r in rs) / len(rs)),
+                         pct(sum(y) / len(rs)),
                          f"{np.mean([r['rounds'] for r in rs]):.2f}",
                          f"{np.mean([r['tokens'] for r in rs]):.0f}",
-                         f"{np.mean([r['imrc_coal'] for r in rs]):.3f}",
-                         f"{a:.3f}" if a is not None else "n/a"])
+                         f"{np.mean([r['imrc_coal'] for r in rs]):.3f}"]
+                        + [f"{a:.3f}" if a is not None else "n/a" for a in cells])
         both = [i for i in common if i in mad]
         if both and name.endswith("bare"):
-            body.append(["mad", len(both), pct(sum(mad[i]["correct"] for i in both) / len(both)),
-                         "-", f"{np.mean([mad[i]['tokens'] for i in both]):.0f}", "-", "-"])
-    return lines + table(["system", "n", "acc", "rounds", "tokens/item",
-                          "mean IMRC", "IMRC AUROC"], body)
+            body.append(["mad", len(both), "-", pct(sum(mad[i]["correct"] for i in both) / len(both)),
+                         "-", f"{np.mean([mad[i]['tokens'] for i in both]):.0f}", "-", "-", "-", "-"])
+    return lines + table(["system", "n", "r0 acc", "acc", "rounds", "tokens/item",
+                          "mean IMRC", "IMRC AUROC", "IMRC r0 AUROC",
+                          "-induced AUROC"], body)
 
 
 def dynamics_section(plain, rows):
@@ -362,18 +410,24 @@ def checks_section(results, plain, rows, pairs, extra, iters):
               f"(coalition IMRC undefined, scored 0). Early convergence on "
               f"{sum(r['converged'] for r in rows)}/{len(rows)}, mean rounds "
               f"{np.mean([r['rounds'] for r in rows]):.2f}.", ""]
-    calls = defaultdict(lambda: [0, 0, 0, 0])
+    calls = defaultdict(lambda: [0, 0, 0, 0, 0])
     for systems in results.values():
-        for r in systems.get("excre", {}).values():
-            for t in r["trail"]:
-                c = calls[t["model"]]
-                c[0] += 1
-                c[1] += bool(t["path"].get("parsed"))
-                c[2] += bool(t.get("repaired"))
-                c[3] += bool(t.get("truncated"))
-    lines += table(["model", "replies", "valid schema %", "needed repair %", "hit token cap %"],
-                   [[m, c[0], pct(c[1] / c[0]), pct(c[2] / c[0]), pct(c[3] / c[0])]
-                    for m, c in sorted(calls.items())])
+        for name in ("excre", "excre_stepsfirst"):
+            for r in systems.get(name, {}).values():
+                for t in r["trail"]:
+                    c = calls[name, t["model"]]
+                    c[0] += 1
+                    c[1] += bool(t["path"].get("parsed"))
+                    c[2] += bool(t.get("repaired"))
+                    c[3] += bool(t.get("truncated"))
+                    # did the reply really put its steps ahead of its answer
+                    s, a = t["raw"].find('"steps"'), t["raw"].find('"answer"')
+                    c[4] += 0 <= s < a
+    lines += table(["system", "model", "replies", "valid schema %", "needed repair %",
+                    "hit token cap %", "steps before answer %"],
+                   [[name, m, c[0], pct(c[1] / c[0]), pct(c[2] / c[0]), pct(c[3] / c[0]),
+                     pct(c[4] / c[0])]
+                    for (name, m), c in sorted(calls.items())])
     cut = {name: sum(r.get("cut", 0) for r in rs) for name, rs in plain.items()}
     if any(cut.values()):
         lines += ["Baseline replies that hit the token cap: "
@@ -415,6 +469,7 @@ def main():
              f"{len(rows)} excre items over {', '.join(datasets)}", ""]
     lines += accuracy_section(plain, datasets)
     lines += signal_section(rows, datasets, names, args.boot)
+    lines += confirmation_section(rich, args.boot)
     lines += selective_section(plain, rows)
     lines += saboteur_section(plain, rich, names, args.boot)
     lines += ablation_section(plain, rich)
