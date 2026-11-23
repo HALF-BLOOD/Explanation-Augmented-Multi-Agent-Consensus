@@ -5,6 +5,7 @@ cot_gemini-flash-lite    32  100.0 [ 89.3,100.0]       378
 cot_gptoss120b      32   96.9 [ 84.3, 99.4]       482
 cot_qwen27b         32   93.8 [ 79.9, 98.3]       685
 excre               31   96.8 [ 83.8, 99.4]     21931
+excre_stepsfirst    15  100.0 [ 79.6,100.0]     24976
 judge               30   96.7 [ 83.3, 99.4]      2824
 mad                 31   96.8 [ 83.8, 99.4]     14248
 reconcile           30   96.7 [ 83.3, 99.4]      6596
@@ -15,6 +16,7 @@ baseline             n  only-excre  only-base        p    p_adj
 cot_gemini-flash-lite    31           0          1   1.0000   1.0000
 cot_gptoss120b      31           0          0   1.0000   1.0000
 cot_qwen27b         31           1          0   1.0000   1.0000
+excre_stepsfirst    15           0          0   1.0000   1.0000
 judge               30           0          0   1.0000   1.0000
 mad                 31           0          0   1.0000   1.0000
 reconcile           30           0          0   1.0000   1.0000
@@ -25,7 +27,8 @@ system            spearman    AURC  acc@70%  acc@80%  acc@90%
 cot_gemini-flash-lite     0.000   0.000    100.0    100.0    100.0
 cot_gptoss120b       0.000   0.006    100.0    100.0     96.4
 cot_qwen27b          0.000   0.076     95.5     96.0     92.9
-excre               -0.041   0.027     95.2     95.8     96.3
+excre               -0.020   0.025     95.2     95.8     96.3
+excre_stepsfirst     0.000   0.000    100.0    100.0    100.0
 judge                0.000   0.005    100.0    100.0     96.3
 mad                  0.000   0.006    100.0    100.0     96.3
 reconcile            0.000   0.005    100.0    100.0     96.3
@@ -33,6 +36,6 @@ sc_gemini-flash-lite     1.000   0.001    100.0    100.0    100.0
 
 excre: converged early on 16/31 items, mean rounds 2.52
   schema compliance (valid after <=1 repair / repair used):
-    gemini-flash-lite  97.2% valid,  1.8% repaired  (109 calls)
+    gemini-flash-lite 100.0% valid,  1.8% repaired  (109 calls)
     gptoss120b       100.0% valid,  0.9% repaired  (109 calls)
     qwen27b           99.1% valid,  2.8% repaired  (109 calls)

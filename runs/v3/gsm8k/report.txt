@@ -6,6 +6,7 @@ cot_gptoss120b      32   96.9 [ 84.3, 99.4]       454
 cot_qwen27b         32   96.9 [ 84.3, 99.4]       448
 excre               32   96.9 [ 84.3, 99.4]     21357
 excre_adv           32   96.9 [ 84.3, 99.4]     21136
+excre_stepsfirst    15   93.3 [ 70.2, 98.8]     16158
 mad                 32   96.9 [ 84.3, 99.4]     11391
 mad_adv             32   96.9 [ 84.3, 99.4]     19002
 sc_gemini-flash-lite    32   96.9 [ 84.3, 99.4]      1591
@@ -15,6 +16,7 @@ baseline             n  only-excre  only-base        p    p_adj
 cot_gemini-flash-lite    32           0          0   1.0000   1.0000
 cot_gptoss120b      32           0          0   1.0000   1.0000
 cot_qwen27b         32           0          0   1.0000   1.0000
+excre_stepsfirst    15           0          0   1.0000   1.0000
 mad                 32           0          0   1.0000   1.0000
 mad_adv             32           0          0   1.0000   1.0000
 sc_gemini-flash-lite    32           0          0   1.0000   1.0000
@@ -26,6 +28,7 @@ cot_gptoss120b       0.000   0.038     95.5     96.0     96.4
 cot_qwen27b          0.000   0.038     95.5     96.0     96.4
 excre               -0.165   0.046     95.5     96.0     96.4
 excre_adv           -0.049   0.027     95.5     96.0     96.4
+excre_stepsfirst     0.309   0.014    100.0    100.0     92.3
 mad                  0.000   0.038     95.5     96.0     96.4
 mad_adv              0.032   0.038     95.5     96.0     96.4
 sc_gemini-flash-lite     0.000   0.038     95.5     96.0     96.4
@@ -44,6 +47,6 @@ excre: converged early on 15/32 items, mean rounds 2.59
 
 excre_adv: converged early on 21/32 items, mean rounds 2.34
   schema compliance (valid after <=1 repair / repair used):
-    gemini-flash-lite  98.1% valid,  4.7% repaired  (107 calls)
+    gemini-flash-lite 100.0% valid,  4.7% repaired  (107 calls)
     gptoss120b       100.0% valid,  0.9% repaired  (107 calls)
     qwen27b          100.0% valid,  1.9% repaired  (107 calls)
