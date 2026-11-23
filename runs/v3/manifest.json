@@ -55,6 +55,10 @@
   "judge": {
    "model": "gptoss120b"
   },
-  "prompts": "4a59f8a0125c253b"
+  "prompts": "4a59f8a0125c253b",
+  "prompts_stepsfirst": "b534e3c383e0130d"
+ },
+ "added": {
+  "prompts_stepsfirst": "2026-11-23T06:06:01+00:00"
  }
 }

@@ -1,13 +1,12 @@
 # runs/v3
 
-updated 2026-11-22 06:34 UTC, +124 this session, stopped: question 32 waiting on qwen27b  
-qwen27b benched: daily quota used up (TPD limit 200000)
+updated 2026-11-23 06:37 UTC, +39 this session
 
 questions finished by every system that runs them
 
 | gsm8k | strategyqa | truthfulqa | arc_challenge | mmlu |
 |---|---|---|---|---|
-| 32/300 | 32/300 | 32/300 | 31/300 | 31/300 |
+| 8/300 | 8/300 | 8/300 | 8/300 | 7/300 |
 
 done / total (accuracy so far)
 
@@ -49,3 +48,9 @@ done / total (accuracy so far)
 |---|---|---|---|
 | judge | 30/30 (80%) | 30/30 (80%) | 30/30 (97%) |
 | reconcile | 30/30 (77%) | 30/30 (83%) | 30/30 (97%) |
+
+## schema-order
+
+| system | gsm8k | strategyqa | truthfulqa | arc_challenge | mmlu |
+|---|---|---|---|---|---|
+| excre_stepsfirst | 8/40 (100%) | 8/40 (75%) | 8/40 (62%) | 8/40 (100%) | 7/40 (100%) |
