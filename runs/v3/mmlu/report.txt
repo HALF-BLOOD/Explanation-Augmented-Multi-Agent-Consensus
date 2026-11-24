@@ -5,7 +5,7 @@ cot_gemini-flash-lite    32   87.5 [ 71.9, 95.0]       440
 cot_gptoss120b      32   90.6 [ 75.8, 96.8]       541
 cot_qwen27b         31   87.1 [ 71.1, 94.9]       810
 excre               31   93.5 [ 79.3, 98.2]     23489
-excre_stepsfirst    15  100.0 [ 79.6,100.0]     22698
+excre_stepsfirst    29   93.1 [ 78.0, 98.1]     24909
 mad                 31   90.3 [ 75.1, 96.7]     15615
 sc_gemini-flash-lite    32   90.6 [ 75.8, 96.8]      2207
 
@@ -14,7 +14,7 @@ baseline             n  only-excre  only-base        p    p_adj
 cot_gemini-flash-lite    31           2          0   0.5000   1.0000
 cot_gptoss120b      31           3          2   1.0000   1.0000
 cot_qwen27b         31           2          0   0.5000   1.0000
-excre_stepsfirst    15           0          0   1.0000   1.0000
+excre_stepsfirst    29           0          0   1.0000   1.0000
 mad                 31           1          0   1.0000   1.0000
 sc_gemini-flash-lite    31           1          0   1.0000   1.0000
 
@@ -24,7 +24,7 @@ cot_gemini-flash-lite     0.000   0.131     81.8     84.0     85.7
 cot_gptoss120b       0.000   0.080     90.9     92.0     92.9
 cot_qwen27b          0.000   0.169     85.7     87.5     88.9
 excre               -0.147   0.074     90.5     91.7     92.6
-excre_stepsfirst     0.000   0.000    100.0    100.0    100.0
+excre_stepsfirst     0.146   0.036     95.0     95.7     96.2
 mad                  0.558   0.076     90.5     91.7     92.6
 sc_gemini-flash-lite    -0.058   0.096     86.4     88.0     89.3
 

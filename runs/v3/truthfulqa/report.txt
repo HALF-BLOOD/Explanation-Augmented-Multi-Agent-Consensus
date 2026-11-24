@@ -6,7 +6,7 @@ cot_gptoss120b      32   78.1 [ 61.2, 89.0]       524
 cot_qwen27b         32   71.9 [ 54.6, 84.4]       940
 excre               32   81.2 [ 64.7, 91.1]     24481
 excre_adv           32   81.2 [ 64.7, 91.1]     22435
-excre_stepsfirst    15   73.3 [ 48.0, 89.1]     22212
+excre_stepsfirst    29   75.9 [ 57.9, 87.8]     22321
 judge               30   80.0 [ 62.7, 90.5]      3239
 mad                 32   84.4 [ 68.2, 93.1]     16724
 mad_adv             32   71.9 [ 54.6, 84.4]     20782
@@ -18,7 +18,7 @@ baseline             n  only-excre  only-base        p    p_adj
 cot_gemini-flash-lite    32           6          2   0.2891   1.0000
 cot_gptoss120b      32           4          3   1.0000   1.0000
 cot_qwen27b         32           4          1   0.3750   1.0000
-excre_stepsfirst    15           1          1   1.0000   1.0000
+excre_stepsfirst    29           2          1   1.0000   1.0000
 judge               30           2          2   1.0000   1.0000
 mad                 32           2          3   1.0000   1.0000
 mad_adv             32           5          2   0.4531   1.0000
@@ -32,7 +32,7 @@ cot_gptoss120b       0.000   0.195     77.3     76.0     78.6
 cot_qwen27b          0.000   0.339     68.2     68.0     71.4
 excre                0.191   0.119     90.9     80.0     82.1
 excre_adv            0.165   0.200     90.9     92.0     82.1
-excre_stepsfirst     0.244   0.149     80.0     75.0     69.2
+excre_stepsfirst     0.327   0.120     80.0     78.3     80.8
 judge                0.000   0.260     76.2     75.0     77.8
 mad                  0.157   0.180     86.4     88.0     89.3
 mad_adv             -0.579   0.522     63.6     68.0     71.4

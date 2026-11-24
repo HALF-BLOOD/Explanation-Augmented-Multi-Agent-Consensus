@@ -1,12 +1,13 @@
 # runs/v3
 
-updated 2026-11-24 07:50 UTC, +38 this session
+updated 2026-11-24 08:18 UTC, +70 this session, stopped: question 30 waiting on gptoss120b  
+gptoss120b benched: daily quota used up (TPD limit 200000)
 
 questions finished by every system that runs them
 
 | gsm8k | strategyqa | truthfulqa | arc_challenge | mmlu |
 |---|---|---|---|---|
-| 23/300 | 23/300 | 23/300 | 22/300 | 22/300 |
+| 29/300 | 29/300 | 29/300 | 29/300 | 29/300 |
 
 done / total (accuracy so far)
 
@@ -53,4 +54,4 @@ done / total (accuracy so far)
 
 | system | gsm8k | strategyqa | truthfulqa | arc_challenge | mmlu |
 |---|---|---|---|---|---|
-| excre_stepsfirst | 23/40 (96%) | 23/40 (83%) | 23/40 (70%) | 22/40 (100%) | 22/40 (91%) |
+| excre_stepsfirst | 29/40 (97%) | 29/40 (83%) | 29/40 (76%) | 29/40 (97%) | 29/40 (93%) |
