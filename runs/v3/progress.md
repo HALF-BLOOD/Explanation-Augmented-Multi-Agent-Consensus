@@ -1,13 +1,12 @@
 # runs/v3
 
-updated 2026-11-25 07:20 UTC, +143 this session, stopped: question 35 waiting on gptoss120b  
-gptoss120b benched: daily quota used up (TPD limit 200000)
+updated 2026-11-26 07:03 UTC, +71 this session
 
 questions finished by every system that runs them
 
 | gsm8k | strategyqa | truthfulqa | arc_challenge | mmlu |
 |---|---|---|---|---|
-| 35/300 | 35/300 | 35/300 | 35/300 | 34/300 |
+| 37/300 | 37/300 | 36/300 | 36/300 | 36/300 |
 
 done / total (accuracy so far)
 
@@ -15,27 +14,27 @@ done / total (accuracy so far)
 
 | system | gsm8k | strategyqa | truthfulqa | arc_challenge | mmlu |
 |---|---|---|---|---|---|
-| cot:gptoss120b | 35/300 (97%) | 35/300 (77%) | 35/300 (71%) | 35/300 (97%) | 35/300 (89%) |
-| cot:qwen27b | 35/300 (97%) | 35/300 (66%) | 35/300 (69%) | 35/300 (94%) | 35/300 (89%) |
-| cot:gemini-flash-lite | 35/300 (97%) | 35/300 (83%) | 35/300 (63%) | 35/300 (100%) | 35/300 (89%) |
-| excre | 35/300 (97%) | 35/300 (77%) | 35/300 (80%) | 35/300 (97%) | 34/300 (94%) |
-| mad | 35/300 (97%) | 35/300 (83%) | 35/300 (80%) | 35/300 (97%) | 34/300 (91%) |
-| sc:gemini-flash-lite | 35/300 (97%) | 35/300 (83%) | 35/300 (63%) | 35/300 (97%) | 35/300 (91%) |
+| cot:gptoss120b | 37/300 (97%) | 37/300 (76%) | 37/300 (73%) | 36/300 (97%) | 36/300 (89%) |
+| cot:qwen27b | 37/300 (97%) | 37/300 (68%) | 37/300 (70%) | 36/300 (94%) | 36/300 (89%) |
+| cot:gemini-flash-lite | 37/300 (95%) | 37/300 (78%) | 37/300 (65%) | 36/300 (100%) | 36/300 (89%) |
+| excre | 37/300 (95%) | 37/300 (78%) | 37/300 (81%) | 36/300 (97%) | 36/300 (94%) |
+| mad | 37/300 (95%) | 37/300 (81%) | 37/300 (81%) | 36/300 (97%) | 36/300 (92%) |
+| sc:gemini-flash-lite | 37/300 (95%) | 37/300 (81%) | 37/300 (65%) | 36/300 (97%) | 36/300 (92%) |
 
 ## saboteur
 
 | system | gsm8k | truthfulqa |
 |---|---|---|
-| excre_adv | 35/40 (97%) | 35/40 (77%) |
-| mad_adv | 35/40 (97%) | 35/40 (66%) |
+| excre_adv | 37/40 (95%) | 37/40 (78%) |
+| mad_adv | 37/40 (95%) | 36/40 (67%) |
 
 ## ablations
 
 | system | strategyqa |
 |---|---|
-| excre_bare | 35/40 (80%) |
-| excre_noda | 35/40 (77%) |
-| excre_noanchor | 35/40 (74%) |
+| excre_bare | 37/40 (81%) |
+| excre_noda | 37/40 (78%) |
+| excre_noanchor | 37/40 (76%) |
 
 ## same-model
 
@@ -54,4 +53,4 @@ done / total (accuracy so far)
 
 | system | gsm8k | strategyqa | truthfulqa | arc_challenge | mmlu |
 |---|---|---|---|---|---|
-| excre_stepsfirst | 35/40 (97%) | 35/40 (80%) | 35/40 (74%) | 35/40 (97%) | 34/40 (94%) |
+| excre_stepsfirst | 37/40 (95%) | 37/40 (78%) | 36/40 (75%) | 36/40 (97%) | 36/40 (94%) |
