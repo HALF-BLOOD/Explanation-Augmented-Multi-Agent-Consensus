@@ -1,0 +1,1 @@
+{"text": "Edgar\u2019s daily pretzel consumption: 18 pretzels.  \nHis brother eats half of that each day:  \n\n\\[\n\\frac{1}{2}\\times 18 = 9 \\text{ pretzels per day}\n\\]\n\nIn one week (7 days) the brother eats:\n\n\\[\n9 \\times 7 = 63 \\text{ pretzels}\n\\]\n\nFinal answer: 63\n\nFinal answer: 63", "usage": {"prompt_tokens": 141, "completion_tokens": 172, "finish": "stop"}}
