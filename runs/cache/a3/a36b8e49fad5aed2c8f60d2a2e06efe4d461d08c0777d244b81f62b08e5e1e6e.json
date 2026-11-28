@@ -1,0 +1,1 @@
+{"text": "```json\n{\n  \"answer\": \"1650\",\n  \"confidence\": 0.0,\n  \"steps\": [],\n  \"considered\": []\n}\n```", "usage": {"prompt_tokens": 2234, "completion_tokens": 41, "finish": "stop"}}
